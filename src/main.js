@@ -18,11 +18,6 @@ if (process.env.NODE_ENV === 'development') {
   mockXHR();
 }
 
-import { login } from '@/api/user';
-const data = login();
-console.log('login mock: ', data)
-// console.log('env:', process.env.NODE_ENV)
-
 Vue.use(ElementUI);
 
 Vue.config.productionTip = false;

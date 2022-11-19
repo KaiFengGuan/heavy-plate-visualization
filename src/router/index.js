@@ -4,7 +4,7 @@ import Router from 'vue-router';
 Vue.use(Router);
 
 /* Layout */
-// import Layout from '@/layout'
+import Layout from '@/layout'
 
 /* Router Modules */
 // import componentsRouter from './modules/components'
@@ -56,13 +56,36 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
-  
+  {
+    path: '/data-overview',
+    name: '数据概览',
+    component: Layout,
+    redirect: '/data-overview/key-indicators',
+    meta: {
+      title: 'title',
+      // icon: ''
+    },
+    children: [
+      {
+        path: 'key-indicators',
+        name: '关键指标',
+        component: () => import('@/views/key-indicators/index'),
+        meta: { title: 'key-1', /* icon: '' */ }
+      },
+      {
+        path: 'heating-process',
+        name: '加热工序',
+        component: () => import('@/views/heating-process/index'),
+        meta: { title: 'key-2', /* icon: '' */ }
+      }
+    ]
+  }
 ];
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: [...constantRoutes, ...asyncRoutes] // 先这样写
 });
 
 const router = createRouter();
