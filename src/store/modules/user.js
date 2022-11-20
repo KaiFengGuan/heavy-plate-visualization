@@ -14,9 +14,7 @@ const state = {
 
 const mutations = {
   LOGIN: (state, data) => {
-    console.log('set data');
-    console.log(state)
-    console.log(data)
+    
   }
 };
 

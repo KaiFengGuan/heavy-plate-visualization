@@ -39,11 +39,12 @@ import Layout from '@/layout'
  * all roles can be accessed
  */
 export const constantRoutes = [
-  {
-    path: '/',
-    // component: () => import('@/view/login/index'),
-    redirect: '/login',
-  },
+  // {
+  //   path: '/',
+  //   // component: () => import('@/view/login/index'),
+  //   redirect: '/login',
+  //   hidden: true
+  // },
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -57,26 +58,123 @@ export const constantRoutes = [
  */
 export const asyncRoutes = [
   {
+    path: '/',
+    component: Layout,
+    redirect: '/home',
+    children: [
+      {
+        path: 'home',
+        name: 'home',
+        component: () => import('@/views/home/index'),
+        meta: { title: '主页', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
     path: '/data-overview',
-    name: '数据概览',
+    name: 'data-overview',
     component: Layout,
     redirect: '/data-overview/key-indicators',
-    meta: {
-      title: 'title',
-      // icon: ''
-    },
+    meta: { title: '数据概览', icon: 'dashboard' },
     children: [
       {
         path: 'key-indicators',
-        name: '关键指标',
+        name: 'key-indicators',
         component: () => import('@/views/key-indicators/index'),
-        meta: { title: 'key-1', /* icon: '' */ }
+        meta: { title: '关键指标', icon: 'dashboard' }
       },
       {
         path: 'heating-process',
-        name: '加热工序',
+        name: 'heating-process',
         component: () => import('@/views/heating-process/index'),
-        meta: { title: 'key-2', /* icon: '' */ }
+        meta: { title: '加热工序', icon: 'dashboard' }
+      },
+      {
+        path: 'rolling-process',
+        name: 'rolling-process',
+        component: () => import('@/views/rolling-process/index'),
+        meta: { title: '轧制工序', icon: 'dashboard' }
+      },
+      {
+        path: 'cooling-process',
+        name: 'cooling-process',
+        component: () => import('@/views/cooling-process/index'),
+        meta: { title: '冷却工序', icon: 'dashboard' }
+      },
+      {
+        path: 'FQC-process',
+        name: 'FQC-process',
+        component: () => import('@/views/FQC-process/index'),
+        meta: { title: '质量检查', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/data-analysis',
+    name: 'data-analysis',
+    component: Layout,
+    redirect: '/data-analysis/heating-analysis',
+    meta: { title: '数据分析', icon: 'dashboard' },
+    children: [
+      {
+        path: 'heating-analysis',
+        name: 'heating-analysis',
+        component: () => import('@/views/heating-analysis/index'),
+        meta: { title: '加热工序', icon: 'dashboard' }
+      },
+      {
+        path: 'rolling-analysis',
+        name: 'rolling-analysis',
+        component: () => import('@/views/rolling-analysis/index'),
+        meta: { title: '轧制工序', icon: 'dashboard' }
+      },
+      {
+        path: 'cooling-analysis',
+        name: 'cooling-analysis',
+        component: () => import('@/views/cooling-analysis/index'),
+        meta: { title: '冷却工序', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/monitoring',
+    name: 'monitoring',
+    component: Layout,
+    redirect: '/monitoring/visualization',
+    meta: { title: '全流程监控', icon: 'dashboard' },
+    children: [
+      {
+        path: 'visualization',
+        name: 'visualization',
+        component: () => import('@/views/visualization/index'),
+        meta: { title: '可视分析', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/administrator',
+    name: 'administrator',
+    component: Layout,
+    redirect: '/administrator/user',
+    meta: { title: '系统管理', icon: 'dashboard' },
+    children: [
+      {
+        path: 'user',
+        name: 'user',
+        component: () => import('@/views/user/index'),
+        meta: { title: '用户管理', icon: 'dashboard' }
+      },
+      {
+        path: 'role',
+        name: 'role',
+        component: () => import('@/views/role/index'),
+        meta: { title: '角色管理', icon: 'dashboard' }
+      },
+      {
+        path: 'permission',
+        name: 'permission',
+        component: () => import('@/views/permission/index'),
+        meta: { title: '权限管理', icon: 'dashboard' }
       }
     ]
   }
