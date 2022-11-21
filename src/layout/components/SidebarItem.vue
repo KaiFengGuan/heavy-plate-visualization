@@ -20,6 +20,7 @@
         :key="child.path"
         :item="child"
         :base-path="resolvePath(child.path)"
+        class="nest-menu"
       />
     </el-submenu>
   </div>
