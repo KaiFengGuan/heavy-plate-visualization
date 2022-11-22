@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper">
+  <div class="app-wrapper" :class="{ hideSidebar: !sidebar }">
     <sidebar class="sidebar-container" />
     <el-container class="main-container">
       <el-header :height="variables.headerHeight">
@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 import variables from '@/styles/variables.scss';
 
 import AppHeader from './components/AppHeader';
@@ -32,8 +34,10 @@ export default {
     Sidebar
   },
   computed: {
+    ...mapGetters([
+      'sidebar'
+    ]),
     variables() {
-      console.log(variables)
       return variables
     }
   }
@@ -41,6 +45,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.sidebar-container {
+  user-select: none;
+}
 .main-container {
   .el-header,
   .el-footer {

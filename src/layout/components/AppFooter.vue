@@ -14,5 +14,10 @@
   justify-content: center;
   align-items: center;
   font-size: 14px;
+  
+  span {
+    user-select: none;
+    cursor: pointer;
+  }
 }
 </style>

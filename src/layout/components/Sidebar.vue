@@ -6,6 +6,8 @@
       :background-color="variables.menuBg"
       :text-color="variables.menuText"
       :active-text-color="variables.menuActiveText"
+      :collapse="isCollapse"
+      :collapse-transition="false"
       mode="vertical"
     >
       <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
@@ -25,7 +27,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'permission_routes'
+      'permission_routes',
+      'sidebar'
     ]),
     activeMenu() {
       const route = this.$route
@@ -38,6 +41,9 @@ export default {
     },
     variables() {
       return variables
+    },
+    isCollapse() {
+      return !this.sidebar
     }
   }
 }

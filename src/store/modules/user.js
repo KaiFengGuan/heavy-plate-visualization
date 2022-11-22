@@ -9,7 +9,8 @@ const state = {
       menus: [],
       views: []
   },
-  loginToken: ''
+  loginToken: '',
+  avatar: '',
 };
 
 const mutations = {
@@ -40,6 +41,9 @@ const actions = {
           reject(err);
         })
     })
+  },
+  logout({ commit }) {
+
   }
 };
 
