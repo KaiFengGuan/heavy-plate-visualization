@@ -1,5 +1,5 @@
 <template>
-  <div class="app-wrapper" :class="{ hideSidebar: !sidebar }">
+  <div class="app-wrapper" :class="{ hideSidebar: sidebar }">
     <sidebar class="sidebar-container" />
     <el-container class="main-container">
       <el-header :height="variables.headerHeight">

@@ -43,7 +43,7 @@ export default {
       return variables
     },
     isCollapse() {
-      return !this.sidebar
+      return this.sidebar
     }
   }
 }
