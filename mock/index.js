@@ -1,10 +1,12 @@
 const Mock = require('mockjs')
+const dataOverview = require('./dataOverview')
 // const { param2Obj } = require('./utils')
 
 const user = require('./login')
 
 const mocks = [
-  ...user
+  ...user,
+  ...dataOverview
 ]
 
 // for front mock
