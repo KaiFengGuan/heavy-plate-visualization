@@ -17,3 +17,11 @@ export function getRhythmData(data) {
     data
   })
 }
+
+// 加热数据报表
+export function getHeatingTableData(upid) {
+  return request({
+    url: `/pidasApi/v1.0/getHeatingTableDataByUpid?upid=${upid}`,
+    method: 'get',
+  });
+}

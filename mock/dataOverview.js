@@ -1008,5 +1008,64 @@ module.exports = [
         }
       ]
     }
+  },
+
+  // 加热工序数据
+  {
+    url: '/pidasApi/v1.0/getHeatingTableDataByUpid',
+    type: 'get',
+    response: {
+      "code": 0,
+      "msg": "ok",
+      "data": {
+        "upid": "19304155000",
+        "slabid": "44643830312",
+        "thick": 250.0,
+        "HeatMode": "40J",
+        "furnaceNo": "C2.4",
+        "duration": 323.0,
+        "durationRange": ['2019-03-04 03:31:11', '2019-03-04 08:54:11'],
+        "section": {
+          "preheating": {
+            "entry": 573.0,
+            "surface": 645.0,
+            "center": 552.0,
+            "seat": 567.0,
+            "average": 634.0,
+            "duration": 119.0
+          },
+          "heating1": {
+            "entry": 684.0,
+            "surface": 758.0,
+            "center": 661.0,
+            "seat": 677.0,
+            "average": 765.0,
+            "duration": 67.0
+          },
+          "heating2": {
+            "entry": 915.0,
+            "surface": 989.0,
+            "center": 879.0,
+            "seat": 901.0,
+            "average": 1051.0,
+            "duration": 90.0
+          },
+          "soaking": {
+            "entry": 1127.0,
+            "surface": 1139.0,
+            "center": 1130.0,
+            "seat": 1120.0,
+            "average": 1124.0,
+            "duration": 46.0
+          },
+          "discharging": {
+            "surface": 1147.0,
+            "center": 1124.0,
+            "seat": 1118.0,
+            "average": 1126.0
+          }
+        }
+      }
+    }
   }
 ]

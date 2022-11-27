@@ -52,6 +52,11 @@
       </el-table-column>
       <el-table-column prop="detail" label="detail" width="80" align="center">
         <template slot-scope="{ row }">
+          <jump-to-detail :upid="row.upid" />
+        </template>
+      </el-table-column>
+      <el-table-column prop="analysis" label="analysis" width="80" align="center">
+        <template slot-scope="{ row }">
           <jump-to-analysis :upid="row.upid" />
         </template>
       </el-table-column>
@@ -74,12 +79,14 @@
 import { getKeyIndicatorsList, getRhythmData } from '@/api/dataOverview';
 
 import PlateShape from './components/PlateShape';
+import JumpToDetail from './components/JumpToDetail';
 import JumpToAnalysis from './components/JumpToAnalysis';
 import RhythmVisual from './components/RhythmVisual';
 
 export default {
   components: {
     PlateShape,
+    JumpToDetail,
     JumpToAnalysis,
     RhythmVisual
   },
@@ -148,7 +155,7 @@ export default {
       getRhythmData().then(res => {
         const { data } = res;
         this.rhythmData = Object.freeze(data);
-        console.log('rhythmData: ', this.rhythmData)
+        // console.log('rhythmData: ', this.rhythmData)
       });
 
       getKeyIndicatorsList().then(res => {
@@ -159,7 +166,7 @@ export default {
         } else {
           this.keyIndicatorsList = Object.freeze(data);
           this.paginationOption.total = this.keyIndicatorsList.length;
-          console.log('keyIndicatorsList: ', this.keyIndicatorsList)
+          // console.log('keyIndicatorsList: ', this.keyIndicatorsList)
         }
       });
     },

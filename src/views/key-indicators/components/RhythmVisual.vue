@@ -34,9 +34,6 @@ export default {
   },
   watch: {
     rhythmData(newVal) {
-      
-      console.log('props data change: ', newVal);
-
       const keys = ['slabid', 'discharge', 'rm', 'fm', 'acc'];
       const source = this.dataToSeries(newVal, keys);
       const series = source.slice(1).map(() => ({
@@ -45,8 +42,6 @@ export default {
         seriesLayoutBy: 'row',
         // emphasis: { focus: 'series' }
       }));
-      
-      console.log(source)
 
       this.paint({ source, series });
     }
