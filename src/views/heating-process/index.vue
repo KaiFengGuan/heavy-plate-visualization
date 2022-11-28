@@ -5,22 +5,29 @@
     </template>
     <template v-else>
       <sub-table :table-data="plateHeatingData" />
+      <heating-curve style="height: 400px" :curve-data="tempCurveData" />
     </template>
   </div>
 </template>
 
 <script>
 import SubTable from './components/SubTable';
+import HeatingCurve from './components/HeatingCurve';
 
-import { getHeatingTableData } from '@/api/dataOverview';
+import {
+  getHeatingTableData,
+  getHeatingCurveData
+} from '@/api/dataOverview';
 
 export default {
   components: {
-    SubTable
+    SubTable,
+    HeatingCurve
   },
   data() {
     return {
-      plateHeatingData: {}
+      plateHeatingData: {},
+      tempCurveData: {}
     }
   },
   computed: {
@@ -39,6 +46,12 @@ export default {
       // this.plateHeatingData = Object.freeze(data);
       this.plateHeatingData = data;
       // console.log('plateHeatingData: ', this.plateHeatingData)
+    });
+
+    getHeatingCurveData(this.getUpid).then(res => {
+      const { data } = res;
+      this.tempCurveData = Object.freeze(data);
+      // console.log('tempCurveData: ', this.tempCurveData);
     });
   },
   mounted() {

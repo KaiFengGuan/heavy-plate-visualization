@@ -22,6 +22,13 @@ export function getRhythmData(data) {
 export function getHeatingTableData(upid) {
   return request({
     url: `/pidasApi/v1.0/getHeatingTableDataByUpid?upid=${upid}`,
-    method: 'get',
+    method: 'get'
+  });
+}
+
+export function getHeatingCurveData(upid) {
+  return request({
+    url: `/pidasApi/v1.0/getHeatingCurveDataByUpid?upid=${upid}`,
+    method: 'get'
   });
 }
