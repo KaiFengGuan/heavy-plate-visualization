@@ -49,3 +49,19 @@ export function getRollingThickCurve(upid) {
     method: 'get'
   });
 }
+
+// 轧制测量值变化曲线
+export function getRollingMeasCurve(upid) {
+  return request({
+    url: `/pidasApi/v1.0/getRollingMeasCurveDataByUpid?upid=${upid}`,
+    method: 'get'
+  });
+}
+
+// 轧制尺寸变化曲线
+export function getRollingSizeCurve(upid) {
+  return request({
+    url: `/pidasApi/v1.0/getRollingSizeCurveDataByUpid?upid=${upid}`,
+    method: 'get'
+  });
+}
