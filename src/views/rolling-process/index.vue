@@ -5,26 +5,30 @@
     </template>
     <template v-else>
       <sub-table :table-data="rollingTableData" />
-      <!-- <heating-curve style="height: 400px" :curve-data="tempCurveData" /> -->
+      <thick-curve style="height: 300px" :curve-data="thickCurveData" />
     </template>
   </div>
 </template>
 
 <script>
 import SubTable from './components/SubTable';
+import ThickCurve from './components/ThickCurve';
 
 import { getUpidByUrl } from '@/utils';
 import {
-  getRollingTableData
+  getRollingTableData,
+  getRollingThickCurve
 } from '@/api/dataOverview';
 
 export default {
   components: {
-    SubTable
+    SubTable,
+    ThickCurve
   },
   data() {
     return {
-      rollingTableData: {}
+      rollingTableData: {},
+      thickCurveData: {},
     }
   },
   computed: {
@@ -37,8 +41,14 @@ export default {
       const { data } = res;
       this.rollingTableData = Object.freeze(data);
       // this.rollingTableData = data;
-      console.log('getRollingTableData:', this.rollingTableData);
+      // console.log('getRollingTableData:', this.rollingTableData);
     });
+
+    getRollingThickCurve(this.getUpid).then(res => {
+      const { data } = res;
+      this.thickCurveData = Object.freeze(data);
+      // console.log('getRollingThickCurve: ', this.thickCurveData);
+    })
   }
 }
 </script>

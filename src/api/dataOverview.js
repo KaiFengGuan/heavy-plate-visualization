@@ -34,9 +34,18 @@ export function getHeatingCurveData(upid) {
   });
 }
 
+// 轧制报表
 export function getRollingTableData(upid) {
   return request({
     url: `/pidasApi/v1.0/getRollingTableDataByUpid?upid=${upid}`,
+    method: 'get'
+  });
+}
+
+// 轧制厚度曲线
+export function getRollingThickCurve(upid) {
+  return request({
+    url: `/pidasApi/v1.0/getRollingThickCurveDataByUpid?upid=${upid}`,
     method: 'get'
   });
 }

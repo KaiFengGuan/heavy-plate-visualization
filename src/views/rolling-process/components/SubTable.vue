@@ -105,9 +105,8 @@ export default {
     }
   },
   watch: {
-    tableData(newVal, oldVal) {
+    tableData(newVal) {
       this.localTableData = newVal;
-      console.log('table data change: ', newVal, oldVal)
     }
   }
 }
