@@ -26,9 +26,17 @@ export function getHeatingTableData(upid) {
   });
 }
 
+// 加热温度曲线
 export function getHeatingCurveData(upid) {
   return request({
     url: `/pidasApi/v1.0/getHeatingCurveDataByUpid?upid=${upid}`,
+    method: 'get'
+  });
+}
+
+export function getRollingTableData(upid) {
+  return request({
+    url: `/pidasApi/v1.0/getRollingTableDataByUpid?upid=${upid}`,
     method: 'get'
   });
 }

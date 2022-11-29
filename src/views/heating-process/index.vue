@@ -14,6 +14,7 @@
 import SubTable from './components/SubTable';
 import HeatingCurve from './components/HeatingCurve';
 
+import { getUpidByUrl } from '@/utils';
 import {
   getHeatingTableData,
   getHeatingCurveData
@@ -32,12 +33,7 @@ export default {
   },
   computed: {
     getUpid() {
-      const route = this.$route;
-      const { query } = route;
-      if (query && query['upid']) {
-        return query['upid'];
-      }
-      return '';
+      return getUpidByUrl(this);
     }
   },
   created() {

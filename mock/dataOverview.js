@@ -4337,5 +4337,70 @@ module.exports = [
         ]
       }
     }
+  },
+
+  // 轧制报表数据
+  {
+    url: '/pidasApi/v1.0/getRollingTableDataByUpid',
+    type: 'get',
+    response: {
+      "code": 0,
+      "msg": "ok",
+      "data": {
+        "upid": "19304155000",
+        "slabid": "44643830312",
+        "basid": "",
+        "slabThickness": 247.0,
+        "slabWidth": 1.85,
+        "slabLength": 2.695,
+        "steelspec": "SMA490BP",
+        "crcode": 4,
+        "productcategory": "L20",
+        "tgtplatethickness2": 0.0152,
+        "tgtwidth": 2.899,
+        "tgtplatelength2": 38.098,
+        "adcontrolcode": 2,
+        "heating_pattern_code": "40J",
+        "ave_temp_dis": 1149,
+        "tgttmrestarttemp1": 890,
+        "tgttmplatetemp": 830,
+        "fce_row": "C1.1",
+        "in_fce_time": 342.0,
+        "staying_time_2": 65.0,
+        "staying_time_soak": 78.0,
+        "discharge_time": "2019-03-01 13:51:05",
+        "sur_temp_entry_soak": 1114.0,
+        "ave_temp_dis": 1118.0,
+        "tgttmrestarttemp1": 820.0,
+        "tgttmplatetemp": 772.0,
+        "slabweight": 9760.0,
+        "thick_std_ce": 34.81,
+        "thick_ave_ds": 34.05,
+        "thick_ave_os": 34.82,
+        "thick_max_ce": 34.99,
+        "thick_min_ce": 34.54,
+        "thick_ave_ce": 0.09,
+        "topwridrm": "2501",
+        "botwridrm": "2502",
+        "topwrplatecountrm": 1150.18,
+        "botwrplatecountrm": 1198,
+        "topwridfm": "3703",
+        "topwrdia": 1188.44,
+        "topwrplatecountfm": "355",
+        "botwridfm": "3704",
+        "botwrdia": 1176.61,
+        "botwrplatecountfm": "355",
+
+        "centerthickness": "",
+        "rightthickness": "",
+        "leftthickness": "",
+        "platethicknessoffset": "",
+        "platewidthoffset": "",
+        "presizingpvpcmode": "",
+        "presizingpvpcdepth": "",
+        "broadsizingpvpcmode": "",
+        "broadsizingpvpcdepth": "",
+      }
+    }
   }
 ]
