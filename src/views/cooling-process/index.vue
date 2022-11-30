@@ -60,7 +60,7 @@ export default {
     getCoolingCurveData(this.getUpid).then(res => {
       const { data } = res;
       this.tempCurveData = Object.freeze(data);
-      console.log('getCoolingCurveData: ', this.tempCurveData)
+      // console.log('getCoolingCurveData: ', this.tempCurveData)
     })
   }
 }

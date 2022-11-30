@@ -1,5 +1,5 @@
 <template>
-  <div class="shape-container">
+  <div class="shape-container" @click="toFQC">
     <div
       v-for="(item, index) in fault"
       :key="`${upid}_fault${index}`"
@@ -26,6 +26,14 @@ export default {
     // console.log(this.fault);
     // console.log(typeof this.fault, typeof this.fault[0]);
   },
+  methods: {
+    toFQC() {
+      this.$router.push({
+        path: `/data-overview/FQC-process`,
+        query: { upid: this.upid }
+      });
+    }
+  }
 };
 </script>
 
@@ -33,6 +41,7 @@ export default {
 .shape-container {
   display: flex;
   justify-content: center;
+  cursor: pointer;
 
   .fault-item {
     width: 15px;

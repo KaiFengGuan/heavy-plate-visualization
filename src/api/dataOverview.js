@@ -89,3 +89,11 @@ export function getCoolingCurveData(upid) {
     method: 'get'
   });
 }
+
+// FQC板形数据
+export function getPlateShapeData(upid) {
+  return request({
+    url: `/pidasApi/v1.0/getPlateShapeDataByUpid?upid=${upid}`,
+    method: 'get'
+  });
+}
