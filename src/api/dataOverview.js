@@ -65,3 +65,27 @@ export function getRollingSizeCurve(upid) {
     method: 'get'
   });
 }
+
+// 冷却报表数据
+export function getCoolingTableData(upid) {
+  return request({
+    url: `/pidasApi/v1.0/getCoolingTableDataByUpid?upid=${upid}`,
+    method: 'get'
+  });
+}
+
+// 冷却扫描仪温度数据
+export function getCoolingTempMapData(upid) {
+  return request({
+    url: `/pidasApi/v1.0/getCoolingTempMapDataByUpid?upid=${upid}`,
+    method: 'get'
+  });
+}
+
+// 冷却曲线数据
+export function getCoolingCurveData(upid) {
+  return request({
+    url: `/pidasApi/v1.0/getCoolingCurveDataByUpid?upid=${upid}`,
+    method: 'get'
+  });
+}
