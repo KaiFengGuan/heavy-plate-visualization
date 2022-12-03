@@ -1,7 +1,7 @@
 <template>
   <div class="header-container">
     <div class="hamburger hover-effect">
-      <hamburger :isActive="sidebar" @toggleClick="toggleSideBar" />
+      <hamburger :isActive="!sidebar" @toggleClick="toggleSideBar" />
     </div>
     
     <div class="name hover-effect">厚板板形质量趋势监控系统</div>
