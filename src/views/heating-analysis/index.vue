@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="analysis-wrapper">
     <div class="control-panel">
       <search-upid
         class="search-upid"
@@ -10,7 +10,10 @@
       <condition-select
         :plate-data="plateData"
         @changeData="changeDataHandle"
-      /> 
+      />
+    </div>
+    <div class="analysis-main">
+      
     </div>
   </div>
 </template>
@@ -20,6 +23,7 @@ import SearchUpid from '@/components/SearchUpid';
 import ConditionSelect from '@/components/ConditionSelect';
 
 import { getUpidByUrl } from '@/utils';
+import { getPlateDataByUpid } from '@/api/dataAnalysis';
 
 export default {
   components: {
@@ -40,7 +44,10 @@ export default {
   methods: {
     searchHandle(upid) {
       this.currentUpid = upid;
-      console.log('点击了搜索：', upid, this.conditionData)
+      getPlateDataByUpid(upid).then(res => {
+        const { data } = res;
+        this.plateData = data;
+      });
     },
     analysisHandle(upid) {
       console.log('点击了分析：', upid, this.conditionData)
@@ -54,13 +61,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.analysis-wrapper {
+  position: relative;
+}
+
 .control-panel {
   width: 350px;
+  position: fixed;
 
   .search-upid {
     padding-bottom: 15px;
     margin-bottom: 15px;
     box-shadow: 0px 1px 0px rgb(0 0 0 / 12%);
   }
+}
+
+.analysis-main {
+  margin-left: 350px;
+  padding-left: 20px;
 }
 </style>

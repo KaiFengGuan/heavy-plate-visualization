@@ -5,7 +5,7 @@
       <el-select
         class="label-select"
         v-model="label"
-        @change="changeLabelSelect"
+        @change="changeRange"
         placeholder="选择标签类型"
       >
         <el-option
@@ -29,42 +29,52 @@
       </el-select>
     </div>
 
-    <template v-if="condition==='size' || condition==='all'">
-      <div class="item" v-for="item in Object.keys(sizeData)" :key="item">
-        <el-checkbox  class="title" v-model="checkStatus[item]">{{item}}:</el-checkbox>
-        <el-slider
-          v-model="sizeData[item]"
-          @change="changeSize"
-          range
-          :max="10">
-        </el-slider>
-      </div>
-    </template>
+    <div class="slider-item">
+      <template v-if="condition==='size' || condition==='all'">
+        <div class="item" v-for="item in sizeKeys" :key="item">
+          <el-checkbox  class="title" v-model="checkStatus[item]">{{item}}:</el-checkbox>
+          <el-slider
+            v-model="range[item]"
+            @change="changeRange"
+            range
+            :format-tooltip="formatTooltip"
+            :min="minMaxStep[item] ? minMaxStep[item][0] : 0"
+            :max="minMaxStep[item] ? minMaxStep[item][1] : 0"
+            :step="minMaxStep[item] ? minMaxStep[item][2] : 0"
+          >
+          </el-slider>
+        </div>
+      </template>
 
-    <template v-if="condition==='process' || condition==='all'">
-      <div class="item" v-for="item in Object.keys(processData)" :key="item">
-        <el-checkbox  class="title" v-model="checkStatus[item]">{{item}}:</el-checkbox>
-        <el-slider
-          v-model="processData[item]"
-          @change="changeProcess"
-          range
-          :max="100">
-        </el-slider>
-      </div>
-    </template>
+      <template v-if="condition==='process' || condition==='all'">
+        <div class="item" v-for="item in processKeys" :key="item">
+          <el-checkbox  class="title" v-model="checkStatus[item]">{{item}}:</el-checkbox>
+          <el-slider
+            v-model="range[item]"
+            @change="changeRange"
+            range
+            :format-tooltip="formatTooltip"
+            :min="minMaxStep[item] ? minMaxStep[item][0] : 0"
+            :max="minMaxStep[item] ? minMaxStep[item][1] : 0"
+            :step="minMaxStep[item] ? minMaxStep[item][2] : 0"
+          >
+          </el-slider>
+        </div>
+      </template>
 
-    <template v-if="condition==='steelType' || condition==='all'">
-      <div class="item">
-        <el-checkbox  class="title" v-model="checkStatus['steelspec']">钢种:</el-checkbox>
-        <el-radio-group v-model="steelTypeData.steelspec" @change="changeSteelType">
-          <el-radio
-            v-if="plateRawData.steelspec?.length"
-            :label="plateRawData.steelspec"
-          >{{plateRawData.steelspec}}</el-radio>
-          <el-radio :label="'all'">不限制</el-radio>
-        </el-radio-group>
-      </div>
-    </template>
+      <template v-if="condition==='steelType' || condition==='all'">
+        <div class="item">
+          <el-checkbox  class="title" v-model="checkStatus['steelspec']">钢种:</el-checkbox>
+          <el-radio-group v-model="range.steelspec" @change="changeRange">
+            <el-radio
+              v-if="plateRawData.steelspec?.length"
+              :label="plateRawData.steelspec"
+            >{{plateRawData.steelspec}}</el-radio>
+            <el-radio :label="'all'">不限制</el-radio>
+          </el-radio-group>
+        </div>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -94,9 +104,9 @@ export default {
       label: opts2[0].value,
       plateRawData: {},   // 钢板规格初始数据
       checkStatus: {
-        length: false,
-        width: false,
-        thick: true,
+        tgtplatelength2: false,
+        tgtwidth: false,
+        tgtplatethickness: true,
         dischargetemp: false,
         tmplatetemp: false,
         cooling_start_temp: false,
@@ -104,21 +114,21 @@ export default {
         cooling_rate: false,
         steelspec: false
       },
-      sizeData: {
-        length: [0, 0],
-        width: [0, 0],
-        thick: [0, 0]
-      },
-      processData: {
+      range: {
+        tgtplatelength2: [0, 0],
+        tgtwidth: [0, 0],
+        tgtplatethickness: [0, 0],
         dischargetemp: [0, 0],
         tmplatetemp: [0, 0],
         cooling_start_temp: [0, 0],
         cooling_stop_temp: [0, 0],
-        cooling_rate: [0, 0]
+        cooling_rate: [0, 0],
+        steelspec: ''
       },
-      steelTypeData: {
-        steelspec: 'X80M'
-      }
+      minMaxStep: {},
+      sizeKeys: ['tgtplatelength2', 'tgtwidth', 'tgtplatethickness'],
+      processKeys: ['tgtdischargetemp', 'tgttmplatetemp', 'cooling_start_temp', 'cooling_stop_temp', 'cooling_rate1'],
+      steelTypeKeys: ['steelspec']
     }
   },
   watch: {
@@ -128,62 +138,62 @@ export default {
       const {
         tgtplatelength2,
         tgtwidth,
-        tgtplatethickness
-      } = newVal;
-      this.sizeData = {
-        length: [tgtplatelength2 - 10, tgtplatelength2 + 10],
-        width: [tgtwidth - 5, tgtwidth + 5],
-        thick: [tgtplatethickness - 0.1, tgtplatethickness + 0.1]
-      };
-
-      const {
+        tgtplatethickness,
         tgtdischargetemp,
         tgttmplatetemp,
         cooling_start_temp,
         cooling_stop_temp,
-        cooling_rate1
+        cooling_rate1,
+        steelspec
       } = newVal;
-      this.processData = {
-        dischargetemp: [tgtdischargetemp - 10, tgtdischargetemp + 10],
-        tmplatetemp: [tgttmplatetemp - 10, tgtdischargetemp + 10],
-        cooling_start_temp: [cooling_start_temp - 10, cooling_start_temp + 10],
-        cooling_stop_temp: [cooling_stop_temp - 10, cooling_stop_temp + 10],
-        cooling_rate: [cooling_rate1 - 10, cooling_rate1 + 10]
-      };
 
-      const { steelspec } = newVal;
-      this.steelTypeData = { steelspec: steelspec };
-    }
+      const range = this.range;
+      const rangeLimit = this.rangeLimit;
+      range.tgtplatelength2 = rangeLimit([tgtplatelength2 - 1, tgtplatelength2 + 2]);
+      range.tgtwidth = rangeLimit([tgtwidth - 0.5, tgtwidth + 0.2]);
+      range.tgtplatethickness = rangeLimit([tgtplatethickness, tgtplatethickness + 0.1]);
+      range.dischargetemp = rangeLimit([tgtdischargetemp - 100, tgtdischargetemp + 100]);
+      range.tmplatetemp = rangeLimit([tgttmplatetemp - 100, tgtdischargetemp + 100]);
+      range.cooling_start_temp = rangeLimit([cooling_start_temp - 100, cooling_start_temp + 100]);
+      range.cooling_stop_temp = rangeLimit([cooling_stop_temp - 100, cooling_stop_temp + 100]);
+      range.cooling_rate = rangeLimit([cooling_rate1 - 10, cooling_rate1 + 10]);
+      range.steelspec = steelspec;
+
+      const sliderKeys = [...this.sizeKeys, ...this.processKeys];
+      for (const key of sliderKeys) {
+        this.minMaxStep[key] = this.slideMaxMinStep(key);
+      }
+    } 
   },
   methods: {
-    changeSize() {
-      this.emitData();
-    },
-    changeProcess() {
-      this.emitData();
-    },
-    changeSteelType() {
-      this.emitData();
-    },
-    changeLabelSelect() {
-      this.emitData();
-    },
-    emitData() {
+    changeRange() {
       const data = {
-        ...this.sizeData,
-        ...this.processData,
-        ...this.steelTypeData,
+        ...this.range,
         label: this.label
       };
       const status = this.checkStatus;
       for (let key of Object.keys(status)) {
-        
         if (!status[key]) {
           if (key === 'steelspec') data[key] = '';
           else data[key] = [];
         }
       }
       this.$emit('changeData', data);
+    },
+    slideMaxMinStep(key) {
+      const value = this.plateRawData[key];
+      const extend = value / 2;
+      const min = value - extend;
+      const max = value + extend;
+      const step = (max - min) / 100;
+      return this.rangeLimit([min, max, step]);
+    },
+    rangeLimit(numArr) {
+      if (numArr[0] < 0) numArr[0] = 0;
+      return numArr;
+    },
+    formatTooltip(val) {
+      return val.toFixed(2)
     }
   }
 }
@@ -207,6 +217,11 @@ export default {
       margin-left: 5px;
       flex-grow: 1;
     }
+  }
+
+  .slider-item {
+    height: 440px;
+    overflow: auto;
   }
 
   .item {
