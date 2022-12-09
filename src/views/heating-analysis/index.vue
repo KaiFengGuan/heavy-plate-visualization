@@ -13,7 +13,13 @@
       />
     </div>
     <div class="analysis-main">
-      
+      <template v-if="visualList.length">
+        <compare-analysis-chart
+          v-for="item in visualList"
+          :key="item.name"
+          :raw-data="item"
+        />
+      </template>
     </div>
   </div>
 </template>
@@ -21,20 +27,26 @@
 <script>
 import SearchUpid from '@/components/SearchUpid';
 import ConditionSelect from '@/components/ConditionSelect';
+import CompareAnalysisChart from '@/components/CompareAnalysisChart';
 
 import { getUpidByUrl } from '@/utils';
-import { getPlateDataByUpid } from '@/api/dataAnalysis';
+import { 
+  getPlateDataByUpid,
+  getHeatingAnalysisDataByUpid
+} from '@/api/dataAnalysis';
 
 export default {
   components: {
     SearchUpid,
-    ConditionSelect
+    ConditionSelect,
+    CompareAnalysisChart
   },
   data() {
     return {
       currentUpid: '',
       plateData: {},      // 钢板自身规格数据
       conditionData: {},  // 规格范围数据
+      visualList: [],     // 对比分析结果
     }
   },
   created() {
@@ -50,7 +62,12 @@ export default {
       });
     },
     analysisHandle(upid) {
-      console.log('点击了分析：', upid, this.conditionData)
+      console.log('点击了分析：', this.conditionData)
+      getHeatingAnalysisDataByUpid(upid, this.conditionData).then(res => {
+        const { data } = res;
+        this.visualList = data;
+        // console.log('对比分析结果：', data)
+      });
     },
     changeDataHandle(data) {
       this.conditionData = data;

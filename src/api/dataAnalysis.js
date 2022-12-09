@@ -8,3 +8,11 @@ export function getPlateDataByUpid(upid) {
   })
 }
 
+// 加热关键指标对比分析
+export function getHeatingAnalysisDataByUpid(upid, data) {
+  return request({
+    url: `/pidasApi/v1.0/getHeatingAnalysisDataByUpid?upid=${upid}`,
+    method: 'post',
+    data
+  })
+}

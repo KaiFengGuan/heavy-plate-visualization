@@ -158,12 +158,13 @@ export default {
       range.cooling_stop_temp = rangeLimit([cooling_stop_temp - 100, cooling_stop_temp + 100]);
       range.cooling_rate = rangeLimit([cooling_rate1 - 10, cooling_rate1 + 10]);
       range.steelspec = steelspec;
+      this.changeRange();
 
       const sliderKeys = [...this.sizeKeys, ...this.processKeys];
       for (const key of sliderKeys) {
         this.minMaxStep[key] = this.slideMaxMinStep(key);
       }
-    } 
+    }
   },
   methods: {
     changeRange() {
@@ -193,7 +194,7 @@ export default {
       return numArr;
     },
     formatTooltip(val) {
-      return val.toFixed(2)
+      return val?.toFixed?.(2) ?? 0;
     }
   }
 }
@@ -221,7 +222,8 @@ export default {
 
   .slider-item {
     height: 440px;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 
   .item {
