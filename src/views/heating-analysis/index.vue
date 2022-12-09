@@ -100,7 +100,6 @@ export default {
     overflow-y: hidden;
     margin-left: 0.4rem;
     margin-right: 0.4rem;
-    // overflow: hidden;
     &:hover {
       overflow-y: scroll;
       margin-right: 0;
