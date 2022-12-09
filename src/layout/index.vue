@@ -52,6 +52,7 @@ export default {
   .el-header,
   .el-footer {
     padding: 0;
+    z-index: 99;
   }
 }
 </style>

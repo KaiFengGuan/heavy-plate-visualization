@@ -76,6 +76,6 @@ export default {
   position: relative;
   user-select: none;
   border-radius: 10px;
-  box-shadow: 0 0 4px rgb(0 0 0 / 24%);
+  box-shadow: 0 0 4px rgb(0 0 0 / 35%);
 }
 </style>

@@ -9,6 +9,11 @@ const overType = {
   warning: 'warning',
   overlimit: 'overlimit'
 }
+const color = {
+  normal: '#06bb9a',
+  warning: '#f4b919',   // #ec8648  #f4b919
+  overlimit: '#f84d4d'
+}
 
 export default class CompareChart {
   constructor({
@@ -132,15 +137,23 @@ export default class CompareChart {
 
   #renderTitle() {
     const titleSize = 20;
-    this._root.append('g')
-      .attr('transform', `translate(${[this._width/2, titleSize]})`)
-    .append('text')
+    const titleGroup = this._root.append('g')
+      .attr('transform', `translate(${[25, titleSize + 5]})`)
+    titleGroup.append('text')
       .text(this._data.name)
-      .attr('text-anchor', 'middle')
+      .attr('text-anchor', 'start')
       .attr('font-size', titleSize)
       .attr('font-weight', 700)
       .attr('font-style', 'italic')
       .attr('fill', 'rgba(0, 0, 0, 0.8)')
+    const box = titleGroup.node().getBBox();
+    console.log(box)
+    const { width } = box;
+    titleGroup.append('line')
+      .attr('transform', 'translate(0, 6)')
+      .attr('x2', width + 30)
+      .attr('stroke', 'rgba(0, 0, 0, 0.25)')
+      .attr('stroke-width', 1)
   }
 
   #renderAxis() {
@@ -197,7 +210,7 @@ export default class CompareChart {
     lineGroup.append('path')
       .attr('d', line(lineData))
       .attr('fill', 'none')
-      .attr('stroke', 'red')
+      .attr('stroke', color.overlimit)
       .attr('stroke-width', 2)
   }
 
@@ -208,9 +221,9 @@ export default class CompareChart {
     const { xData, yData } = this._data;
     const { avg, minMax, std } = this._deviation;
     const path = _renderPath.bind(this, areaGroup, yData[0], xData);
-    path(avg, 'blue');
-    path(std, 'yellow');
-    path(minMax, 'red');
+    path(avg, color.normal);
+    path(std, color.warning);
+    path(minMax, color.overlimit);
 
     function _renderPath(group, basis, xData, yData, color) {
       const line = d3.line()
@@ -228,8 +241,8 @@ export default class CompareChart {
 
   #renderLimit() {
     const limitStyle = {
-      colorWarning: 'green',
-      colorLimit: 'red',
+      colorWarning: color.warning,
+      colorLimit: color.overlimit,
       lineWidth: 1
     }
     const limitItem = this._root.append('g')
@@ -314,6 +327,10 @@ export default class CompareChart {
     function _mouseenterHandle(event, d) {
       d3.select(this).attr('opacity', 0.4);
       const data = that._dataMap.get(d);
+      let tooltipColor;
+      if (data.type === overType.normal) tooltipColor = color.normal;
+      else if (data.type === overType.warning) tooltipColor = color.warning;
+      else tooltipColor = color.overlimit;
       const contentArr = [
         `position: ${data.xData}`,
         `状态: ${data.type}`,
@@ -331,7 +348,8 @@ export default class CompareChart {
         y: event.offsetY - 2,
         content: contentArr,
         fontSize: '14px',
-        color: 'green'
+        color: tooltipColor,  // '#576270'
+        stroke: tooltipColor
       })
     }
     function _mouseleaveHandle() {

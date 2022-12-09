@@ -203,10 +203,12 @@ export default {
 <style lang="scss">
 .condition-container {
   color: rgba(0,0,0,.45);
+  display: flex;
+  flex-direction: column;
 
   .select-item {
     display: flex;
-    margin: 15px 0;
+    margin: 15px 0 0;
 
     .title {
       font-size: 16px;
@@ -221,9 +223,7 @@ export default {
   }
 
   .slider-item {
-    height: 440px;
-    overflow-x: hidden;
-    overflow-y: auto;
+    margin-top: 15px;
   }
 
   .item {

@@ -133,6 +133,7 @@ export default class TooltipClass {
 
     this._backgroundPath
       .attr('stroke', stroke)
+      .attr('stroke-width', 2)
       .attr('fill', backgroundColor);
     this._contentGroup
       .style('font-family', fontFamily)

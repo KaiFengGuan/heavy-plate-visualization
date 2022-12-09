@@ -7,10 +7,14 @@
         @clickSearch="searchHandle"
         @clickAnalysis="analysisHandle"
       />
-      <condition-select
-        :plate-data="plateData"
-        @changeData="changeDataHandle"
-      />
+      <div class="condition-select">
+        <div class="title">对比分析数据筛选</div>
+        <condition-select
+          :plate-data="plateData"
+          @changeData="changeDataHandle"
+        />
+      </div>
+      
     </div>
     <div class="analysis-main">
       <template v-if="visualList.length">
@@ -80,6 +84,28 @@ export default {
 <style lang="scss" scoped>
 .analysis-wrapper {
   position: relative;
+  display: flex;
+
+  .condition-select {
+    .title {
+      margin-top: 15px;
+      color: rgba(0, 0, 0, 0.55);
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 40px;
+    }
+
+    height: 565px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    margin-left: 0.4rem;
+    margin-right: 0.4rem;
+    // overflow: hidden;
+    &:hover {
+      overflow-y: scroll;
+      margin-right: 0;
+    }
+  }
 }
 
 .control-panel {
@@ -88,7 +114,6 @@ export default {
 
   .search-upid {
     padding-bottom: 15px;
-    margin-bottom: 15px;
     box-shadow: 0px 1px 0px rgb(0 0 0 / 12%);
   }
 }
@@ -96,5 +121,6 @@ export default {
 .analysis-main {
   margin-left: 350px;
   padding-left: 20px;
+  flex-grow: 1;
 }
 </style>
