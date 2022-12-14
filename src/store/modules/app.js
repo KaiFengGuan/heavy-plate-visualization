@@ -1,5 +1,5 @@
 const state = {
-  sidebarCollapse: false    // false: 不折叠
+  sidebarCollapse: true    // false: 不折叠
 }
 
 const mutations = {

@@ -1,14 +1,14 @@
 <template>
   <div class="app-wrapper" :class="{ hideSidebar: sidebar }">
     <sidebar class="sidebar-container" />
-    <el-container class="main-container">
-      <el-header :height="variables.headerHeight">
+    <el-container direction="vertical" class="main-container">
+      <el-header v-if="displayHeader" :height="variables.headerHeight">
         <app-header />
       </el-header>
       <el-main>
         <app-main />
       </el-main>
-      <el-footer :height="variables.footerHeight">
+      <el-footer v-if="displayHeader" :height="variables.footerHeight">
         <app-footer />
       </el-footer>
     </el-container>
@@ -39,6 +39,9 @@ export default {
     ]),
     variables() {
       return variables
+    },
+    displayHeader() {
+      return this.$route.path !== '/monitoring/visualization';
     }
   }
 }

@@ -1,0 +1,43 @@
+.el-card {
+
+  &.is-always-shadow {
+    box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+  }
+  
+  .el-card__header {
+    margin: 5px 10px;
+    padding: 5px 0;
+    border-bottom: 1px solid #B9B3B4;
+    
+    span {
+      color: #2c2c2c;
+      font-size: 16px;
+      line-height: 18px;
+    }
+
+    svg {
+      margin-right: 5px;
+    }
+  }
+
+  .el-card__body {
+    padding: 0;
+    margin: 5px 10px;
+    height: calc(100% - 47px);  // 47是header高度+border+margin
+  }
+
+  
+
+  .clearfix:before,
+  .clearfix:after {
+    display: table;
+    content: "";
+  }
+  .clearfix:after {
+    clear: both
+  }
+}
+
+.no-header-card>.el-card__body {
+  height: calc(100% - 10px);  // 10是header的margin
+}
