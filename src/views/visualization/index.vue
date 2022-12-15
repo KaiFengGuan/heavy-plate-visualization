@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import CalendarView from './components/CalendarView';
+import CalendarView from './components/CalendarView/index';
 import Overview from './components/Overview';
 import AnalysisView from './components/AnalysisView';
 import SnapshotView from './components/SnapshotView';

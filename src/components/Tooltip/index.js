@@ -93,9 +93,10 @@ export default class TooltipClass {
     }
   
     function removeChart() {
-      timer = setTimeout(()=> {
-        that._container.attr('display', 'none');
-      }, 0);
+      // timer = setTimeout(()=> {
+      //   that._container.attr('display', 'none');
+      // }, 0);
+      that._container.attr('display', 'none');
     }
   
     return {
@@ -143,9 +144,13 @@ export default class TooltipClass {
     // 渲染content
     const hasContent = this.#hasContent();
     if (hasContent && this._content !== content) {
-      this._contentGroup.selectAll('*').remove();
+      this._contentGroup.selectChildren().remove();
+      this.#renderContent(content);
+    } else if (hasContent && this._content === content) {
+      // 不渲染
+    } else {
+      this.#renderContent(content);
     }
-    this.#renderContent(content);
     
     // 更新位置和背景，对齐
     const contentBox = this.#getTooltipContentBox(this._contentGroup);
@@ -193,8 +198,9 @@ export default class TooltipClass {
     boxWidth=10,
     boxHeight=boxWidth*1.732
   }={}) {
+    const animation = d3.transition().duration(100);
     const pathStr = pathShape(direction, box, horizon, vertical, boxWidth, boxHeight);
-    pathEle.attr('d', pathStr);
+    pathEle.transition(animation).attr('d', pathStr);
   }
 
   #getTooltipBox(tooltipGroup) {
@@ -206,18 +212,18 @@ export default class TooltipClass {
   }
 
   #updateTooltipPosition(group, direction=dir.up, {height=0, width=0, x=0, y=0}={}) {
-    // const animation = group.transition().duration(500);
+    const animation = d3.transition().duration(100);
     if (direction === dir.up) {
       this._container
         .style('top', `${y - height}px`)
         .style('left', `${x - width/2}px`);
-      group//.transition(animation)
+      group.transition(animation)
         .attr('transform', `translate(${[width/2, height]})`)
     } else {
       this._container
         .style('top', `${y - 10}px`)
         .style('left', `${x - width/2}px`);
-      group//.transition(animation)
+      group.transition(animation)
         .attr('transform', `translate(${[width/2, 0]})`)
     }
   }
@@ -238,8 +244,8 @@ export default class TooltipClass {
       x = -width/2;
       y = vertical + boxHeight;
     }
-    // const animation = group.transition().duration(500);
-    group//.transition(animation)
+    const animation = d3.transition().duration(100);
+    group.transition(animation)
       .attr('transform', `translate(${[x, y]})`);
   }
 
