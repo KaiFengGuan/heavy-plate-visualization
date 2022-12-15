@@ -104,6 +104,7 @@ export default {
       font-style: italic;
       text-align: center;
       margin: 0.8em auto;
+      user-select: none;
       span {
         letter-spacing: 0.1em;
       }

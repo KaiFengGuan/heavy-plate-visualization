@@ -17,11 +17,11 @@
 
 <script>
 import CalendarView from './components/CalendarView/index';
-import Overview from './components/Overview';
-import AnalysisView from './components/AnalysisView';
-import SnapshotView from './components/SnapshotView';
-import ConclusionView from './components/ConclusionView';
-import DistributionView from './components/DistributionView';
+import Overview from './components/Overview/index';
+import AnalysisView from './components/AnalysisView/index';
+import SnapshotView from './components/SnapshotView/index';
+import ConclusionView from './components/ConclusionView/index';
+import DistributionView from './components/DistributionView/index';
 
 export default {
   components: {
