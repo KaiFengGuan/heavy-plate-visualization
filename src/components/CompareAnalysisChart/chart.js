@@ -3,6 +3,7 @@ import { dir } from '../Tooltip';
 import { randomString, curry } from '@/utils';
 import compare_warning from '@/assets/icon/compare_warning.svg';
 import compare_error from '@/assets/icon/compare_error.svg';
+import tooltipIns from '@/utils/tooltip';
 
 const overType = {
   normal: 'normal',
@@ -25,8 +26,6 @@ export default class CompareChart {
     this._height = height;
     this._margin = margin;
     this._root = rootNode;
-
-    this._tooltip = null;
 
     this._xScale = null;
     this._yScale = null;
@@ -98,11 +97,6 @@ export default class CompareChart {
     }
 
     console.log('准备绘图：', this._data, this._deviation, this._overLimit)
-    return this;
-  }
-
-  propsTooltip(instance) {
-    this._tooltip = instance;
     return this;
   }
 
@@ -341,11 +335,13 @@ export default class CompareChart {
         `下方差: ${data.lowerStd}`,
         `最大值: ${data.min}`
       ];
-      _tooltip && _tooltip.showTooltip({
+      tooltipIns && tooltipIns.showTooltip({
         id: contentArr.join(';'),
         direction: dir.up,
-        x: that._xScale(data.xData),
-        y: event.offsetY - 2,
+        // x: that._xScale(data.xData),
+        // y: event.offsetY - 2,
+        x: event.pageX,
+        y: event.pageY,
         content: contentArr,
         fontSize: '14px',
         color: tooltipColor,  // '#576270'
@@ -354,7 +350,7 @@ export default class CompareChart {
     }
     function _mouseleaveHandle() {
       d3.select(this).attr('opacity', 0);
-      _tooltip && _tooltip.removeTooltip();
+      tooltipIns && tooltipIns.removeTooltip();
     }
   }
 }

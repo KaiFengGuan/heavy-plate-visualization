@@ -25,9 +25,7 @@
 import * as d3 from 'd3';
 import { randomString } from '@/utils';
 import { getNumberOfPlatesByTime } from '@/api/visualization';
-
 import CalendarChart from './CalendarChart';
-import TooltipClass from '@/components/Tooltip';
 
 export default {
   data() {
@@ -35,7 +33,6 @@ export default {
       curMonth: this.$store.getters.curMonth,
       svgId: `calendarChart_${randomString()}`,
       chartIns: null,
-      tooltipIns: null,
       calendarData: []
     }
   },
@@ -56,11 +53,6 @@ export default {
     const width = svg.clientWidth;
     const height = svg.clientHeight;
     this.chartIns = new CalendarChart({ width, height }, d3.select(svg));
-    this.tooltipIns = new TooltipClass(
-      { width: 0, height: 0 },
-      svg.parentElement,
-      `tooltip_${randomString()}`
-    );
     
     if (this.calendarData.length) {
       this.paint();
@@ -77,7 +69,6 @@ export default {
       if (!this.chartIns) return;
       this.chartIns
         .dataInit(this.calendarData)
-        .propsTooltip(this.tooltipIns)
         .render()
     }
   }

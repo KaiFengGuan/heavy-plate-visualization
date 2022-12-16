@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import { dir } from '@/components/Tooltip';
+import tooltipIns from '@/utils/tooltip';
 import { randomString, curry } from '@/utils';
+import { visualColor } from '../../utils';
 
 /**
  * js 的 Date对象的 getDay 方法返回一个数字
@@ -19,8 +21,6 @@ export default class CalendarChart {
     this._margin = margin;
     this._root = rootNode;
     this._cellSize = { w: 20, h: 15};   // 日历格子尺寸
-
-    this._tooltip = null;
 
     this._weekX = null;
     this._weekY = null;
@@ -53,11 +53,6 @@ export default class CalendarChart {
     return this;
   }
 
-  propsTooltip(instance) {
-    this._tooltip = instance;
-    return this;
-  }
-
   render() {
     this._root.selectChildren().remove();  // 先清空
 
@@ -78,8 +73,8 @@ export default class CalendarChart {
       weekNums = d3.range(1, 7);  // [1, 7)
     const xRange = [left, left + w * week.length],
       yRange = [top, top + h * weekNums.length];
-    const lowerColor = d3.color('#F6EFA6'),
-      upperColor = d3.color('#BF444C');
+    const lowerColor = d3.color(visualColor.good),
+      upperColor = d3.color(visualColor.bad);
     
     this._weekX = d3.scaleBand(week, xRange);
     this._weekY = d3.scaleBand(weekNums, yRange);   // 一个月最多占6周
@@ -168,7 +163,7 @@ export default class CalendarChart {
 
   #renderTooltip() {
     const that = this;
-    const { _tooltip, _weekX, _weekY, _cellSize } = this;
+    const { _cellSize } = this;
     const scaleY = this._colorScaleY;
     this._root.selectAll('.carlendar-cell')
       .on('mouseenter', _mouseenterHandle)
@@ -188,18 +183,18 @@ export default class CalendarChart {
         `percent: ${(ratio * 100).toFixed(2)}%`,
         `total: ${total}`
       ];
-      _tooltip && _tooltip.showTooltip({
+      tooltipIns && tooltipIns.showTooltip({
         id: randomString(),
         direction,
-        x: _weekX(x) + xOffset,
-        y: _weekY(y) + yOffset,
+        x: event.pageX + xOffset,
+        y: event.pageY + yOffset,
         content: content,
       })
     }
     function _mouseleaveHandle() {
       d3.select(this).attr('stroke-width', 0.2);
       that.#disappearColorPos();
-      _tooltip && _tooltip.removeTooltip();
+      tooltipIns && tooltipIns.removeTooltip();
     }
   }
 }

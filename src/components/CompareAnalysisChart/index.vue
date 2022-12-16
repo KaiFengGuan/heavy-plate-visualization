@@ -8,7 +8,6 @@
 import * as d3 from 'd3';
 import { randomString } from '@/utils';
 import CompareChart from './chart';
-import TooltipClass from '../Tooltip';
 
 /**
  * rawData attribute：
@@ -34,8 +33,7 @@ export default {
   data() {
     return {
       svgId: `compareChart_${randomString()}`,
-      chartIns: null,
-      tooltipIns: null
+      chartIns: null
     }
   },
   created() {
@@ -47,12 +45,6 @@ export default {
     const height = svg.clientHeight;
     this.chartIns = new CompareChart({ width, height }, d3.select(svg));
 
-    this.tooltipIns = new TooltipClass(
-      { width: 0, height: 0 },
-      svg.parentElement,
-      `tooltip_${randomString()}`
-    );
-
     if(Object.keys(this.rawData).length) {
       this.paint();
     }
@@ -61,7 +53,6 @@ export default {
     paint() {
       this.chartIns
         .dataInit(this.rawData)
-        .propsTooltip(this.tooltipIns)
         .render()
     }
   }

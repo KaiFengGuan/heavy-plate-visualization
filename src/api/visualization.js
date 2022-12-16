@@ -8,11 +8,11 @@ export function getNumberOfPlatesByTime(date) {
   })
 }
 
-// // 加热关键指标对比分析
-// export function getHeatingAnalysisDataByUpid(upid, data) {
-//   return request({
-//     url: `/pidasApi/v1.0/getHeatingAnalysisDataByUpid?upid=${upid}`,
-//     method: 'post',
-//     data
-//   })
-// }
+// 降维数据
+export function getScatterDataByTime(params) {
+  return request({
+    url: `/newbaogangapi/v1.0/getScatterDataByTime`,
+    method: 'get',
+    params
+  })
+}
