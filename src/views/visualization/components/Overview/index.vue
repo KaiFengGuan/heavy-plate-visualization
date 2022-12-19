@@ -131,9 +131,5 @@ export default {
   div {
     position: relative;
   }
-
-  svg {
-    // border: 1px solid grey;
-  }
 }
 </style>
