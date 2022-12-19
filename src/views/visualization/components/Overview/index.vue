@@ -23,6 +23,7 @@ import { getScatterDataByTime } from '@/api/visualization';
 
 import TooltipClass from '@/components/Tooltip';
 import ScatterChart from './ScatterChart';
+import SankeyChart from './SankeyChart';
 
 export default {
   computed: {
@@ -97,7 +98,7 @@ export default {
           ins = new ScatterChart({ width, height }, d3.select(svg));
           break;
         case 'sankey':
-          ins = {'b': 2};
+          ins = new SankeyChart({ width, height }, d3.select(svg));
           break;
         default:
           break;
@@ -110,11 +111,13 @@ export default {
       if (!this.scatterIns) return;
       this.scatterIns
         .dataInit(this.scatterData)
-        // .propsTooltip(this.tooltipIns)
         .render()
     },
     sankeyRender() {
       if (!this.sankeyIns) return;
+      this.sankeyIns
+        .dataInit(this.sankeyData)
+        .render()
     }
   }
 };
@@ -130,7 +133,7 @@ export default {
   }
 
   svg {
-    border: 1px solid grey;
+    // border: 1px solid grey;
   }
 }
 </style>

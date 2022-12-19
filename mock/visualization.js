@@ -7,161 +7,37 @@ module.exports = [
       "code": 0,
       "msg": "ok",
       "data": [
-        {
-          date: '2021-03-01',
-          good: 187, bad: 54, noflag: 21,
-          total: 262
-        },
-        {
-          date: '2021-03-02',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-03',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-04',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-05',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-06',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-07',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-08',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-09',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-10',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-11',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-12',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-13',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-14',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-15',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-16',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-17',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-18',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-19',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-20',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-21',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-22',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-23',
-          good: 39, bad: 178, noflag: 54,
-          total: 271
-        },
-        {
-          date: '2021-03-24',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-25',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-26',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-27',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-28',
-          good: 217, bad: 21, noflag: 4,
-          total: 242
-        },
-        {
-          date: '2021-03-29',
-          good: 117, bad: 157, noflag: 4,
-          total: 278
-        },
-        {
-          date: '2021-03-30',
-          good: 253, bad: 75, noflag: 67,
-          total: 395
-        },
-        {
-          date: '2021-03-31',
-          good: 175, bad: 17, noflag: 94,
-          total: 286
-        },
+        { date: '2021-03-01', good: 70, bad: 32, noflag: 77, total: 179 },
+        { date: '2021-03-02', good: 40, bad: 33, noflag: 83, total: 156 },
+        { date: '2021-03-03', good: 118, bad: 105, noflag: 4, total: 227 },
+        { date: '2021-03-04', good: 47, bad: 110, noflag: 34, total: 191 },
+        { date: '2021-03-05', good: 102, bad: 61, noflag: 295, total: 458 },
+        { date: '2021-03-06', good: 90, bad: 129, noflag: 158, total: 377 },
+        { date: '2021-03-07', good: 148, bad: 122, noflag: 152, total: 422 },
+        { date: '2021-03-08', good: 204, bad: 140, noflag: 12, total: 356 },
+        { date: '2021-03-09', good: 218, bad: 100, noflag: 104, total: 422 },
+        { date: '2021-03-10', good: 142, bad: 49, noflag: 176, total: 367 },
+        { date: '2021-03-11', good: 172, bad: 25, noflag: 113, total: 310 },
+        { date: '2021-03-12', good: 152, bad: 43, noflag: 206, total: 401 },
+        { date: '2021-03-13', good: 42, bad: 26, noflag: 228, total: 296 },
+        { date: '2021-03-14', good: 46, bad: 6, noflag: 27, total: 79 },
+        { date: '2021-03-15', good: 12, bad: 101, noflag: 25, total: 138 },
+        { date: '2021-03-16', good: 75, bad: 87, noflag: 95, total: 257 },
+        { date: '2021-03-17', good: 120, bad: 51, noflag: 95, total: 266 },
+        { date: '2021-03-18', good: 170, bad: 116, noflag: 119, total: 405 },
+        { date: '2021-03-19', good: 130, bad: 29, noflag: 95, total: 254 },
+        { date: '2021-03-20', good: 115, bad: 101, noflag: 225, total: 441 },
+        { date: '2021-03-21', good: 255, bad: 84, noflag: 80, total: 419 },
+        { date: '2021-03-22', good: 227, bad: 76, noflag: 114, total: 417 },
+        { date: '2021-03-23', good: 223, bad: 19, noflag: 116, total: 358 },
+        { date: '2021-03-24', good: 147, bad: 97, noflag: 208, total: 452 },
+        { date: '2021-03-25', good: 123, bad: 76, noflag: 93, total: 292 },
+        { date: '2021-03-26', good: 167, bad: 37, noflag: 105, total: 309 },
+        { date: '2021-03-27', good: 205, bad: 123, noflag: 9, total: 337 },
+        { date: '2021-03-28', good: 69, bad: 125, noflag: 120, total: 314 },
+        { date: '2021-03-29', good: 199, bad: 91, noflag: 77, total: 367 },
+        { date: '2021-03-30', good: 178, bad: 87, noflag: 64, total: 329 },
+        { date: '2021-03-31', good: 59, bad: 97, noflag: 115, total: 271 }
       ]
     }
   },

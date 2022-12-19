@@ -73,7 +73,11 @@ export default class CalendarChart {
       weekNums = d3.range(1, 7);  // [1, 7)
     const xRange = [left, left + w * week.length],
       yRange = [top, top + h * weekNums.length];
-    const lowerColor = d3.color(visualColor.good),
+    // const lowerColor = d3.color('#F6EFA6'),  // echarts颜色
+    //   upperColor = d3.color('#BF444C');
+    // const lowerColor = d3.color(visualColor.good),
+    //   upperColor = d3.color(visualColor.bad);
+    const lowerColor = d3.color('#FFF7E8'),
       upperColor = d3.color(visualColor.bad);
     
     this._weekX = d3.scaleBand(week, xRange);

@@ -15,8 +15,6 @@ export default class ScatterChart {
     this._margin = margin;
     this._root = rootNode;
 
-    this._tooltip = null;
-
     this._scaleX = null;
     this._scaleY = null;
 
@@ -27,13 +25,8 @@ export default class ScatterChart {
 
   dataInit(data) {
     this._data = data;
-    console.log('散点图渲染数据', data)
+    // console.log('散点图渲染数据', data)
 
-    return this;
-  }
-
-  propsTooltip(instance) {
-    this._tooltip = instance;
     return this;
   }
 
@@ -74,7 +67,7 @@ export default class ScatterChart {
       .attr('r', 2)
       .attr('stroke-width', 1)
       .attr('stroke', d => getLabelColor(d.label))
-      .attr('fill', d => d3.color(getLabelColor(d.label)).brighter(0.5))
+      .attr('fill', d => d3.color(getLabelColor(d.label)).brighter(0.8))
   }
 
   #renderTooltip() {
