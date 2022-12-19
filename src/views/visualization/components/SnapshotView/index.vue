@@ -4,7 +4,7 @@
       <svg-icon :icon-class="'snapshot'"></svg-icon>
       <span>Snapshot view</span>
     </div>
-    <div>分析视图快照</div>
+    <div class="snapshot-chart">分析视图快照</div>
   </el-card>
 </template>
 
@@ -13,4 +13,7 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+.snapshot-chart {
+  height: 406px;
+}
 </style>

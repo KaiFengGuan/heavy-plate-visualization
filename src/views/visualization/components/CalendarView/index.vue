@@ -78,7 +78,7 @@ export default {
 <style lang="scss" scoped>
 .calendar-container {
   display: flex;
-  height: 100%;
+  height: 125px;
 
   .date-select {
     width: 130px;
@@ -109,7 +109,6 @@ export default {
   .calendar-chart {
     flex: 1;
     position: relative;
-    // border: 1px solid grey;
   }
 }
 </style>

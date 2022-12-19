@@ -21,7 +21,6 @@ import * as d3 from 'd3';
 import { randomString } from '@/utils';
 import { getScatterDataByTime } from '@/api/visualization';
 
-import TooltipClass from '@/components/Tooltip';
 import ScatterChart from './ScatterChart';
 import SankeyChart from './SankeyChart';
 
@@ -126,7 +125,7 @@ export default {
 <style lang="scss" scoped>
 .overview-container {
   display: flex;
-  height: 100%;
+  height: 310px;
 
   div {
     position: relative;

@@ -4,7 +4,7 @@
       <svg-icon :icon-class="'link'"></svg-icon>
       <span>Analysis View</span>
     </div>
-    <div>分析视图内容</div>
+    <div class="analysis-chart">分析视图内容</div>
   </el-card>
 </template>
 
@@ -13,4 +13,7 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+.analysis-chart {
+  height: 870px;
+}
 </style>

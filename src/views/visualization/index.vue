@@ -42,7 +42,8 @@ $card_bottom: 10px;
 
 .visual-container {
   // background-color: #EDF0F4;
-  height: 100%;
+  // height: 100%;
+  height: 910px;
 
   .el-card {
     margin-bottom: $card_bottom;
@@ -59,28 +60,6 @@ $card_bottom: 10px;
 
   .col-item:last-child {
     margin-bottom: 0;
-  }
-
-
-  .calendar-view {
-    height: calc(18% - $card_bottom);
-  }
-
-  .overview {
-    height: calc(40% - $card_bottom);
-  }
-
-  .distribution-view {
-    height: 42%;
-  }
-  
-  .analysis-view {
-    height: 100%;
-  }
-
-  .snapshot-view,
-  .conclusion-view {
-    height: calc(50% - $card_bottom/2);
   }
 }
 </style>

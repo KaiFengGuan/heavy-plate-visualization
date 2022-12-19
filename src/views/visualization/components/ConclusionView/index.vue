@@ -4,7 +4,7 @@
       <svg-icon :icon-class="'tag'"></svg-icon>
       <span>Conclusion view</span>
     </div>
-    <div>结论视图内容</div>
+    <div class="conclusion-chart">结论视图内容</div>
   </el-card>
 </template>
 
@@ -13,4 +13,7 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+.conclusion-chart {
+  height: 407px;
+}
 </style>
