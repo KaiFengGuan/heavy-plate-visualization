@@ -112,7 +112,7 @@ export default class TooltipClass {
   _createToolTip({
     id = Math.random().toString(),  // content id
     backgroundColor = 'white',
-    stroke =  '#ccc',
+    stroke =  '#86909C',
     content = ['123', '43fsd', 'dsafdf'],  // content只能是字符串、字符串数组、柯里化后的函数
     vertical = 10,        // vertical padding
     horizon = 10,         // horizon padding
@@ -198,7 +198,7 @@ export default class TooltipClass {
     boxWidth=10,
     boxHeight=boxWidth*1.732
   }={}) {
-    const animation = d3.transition().duration(100);
+    const animation = d3.transition().duration(50);
     const pathStr = pathShape(direction, box, horizon, vertical, boxWidth, boxHeight);
     pathEle.transition(animation).attr('d', pathStr);
   }
@@ -212,7 +212,7 @@ export default class TooltipClass {
   }
 
   #updateTooltipPosition(group, direction=dir.up, {height=0, width=0, x=0, y=0}={}) {
-    const animation = d3.transition().duration(100);
+    const animation = d3.transition().duration(50);
     if (direction === dir.up) {
       this._container
         .style('top', `${y - height}px`)
@@ -244,7 +244,7 @@ export default class TooltipClass {
       x = -width/2;
       y = vertical + boxHeight;
     }
-    const animation = d3.transition().duration(100);
+    const animation = d3.transition().duration(50);
     group.transition(animation)
       .attr('transform', `translate(${[x, y]})`);
   }

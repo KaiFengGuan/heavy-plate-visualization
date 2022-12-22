@@ -5,6 +5,7 @@ const getter = {
   curMonth: state => state.visual.curMonth,
   dateRange: state => state.visual.dateRange,
   selectedData: state => state.visual.selectedData,
+  plateParams: state => state.visual.plateParams,
 }
 
 export default getter;
