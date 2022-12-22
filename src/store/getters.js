@@ -4,7 +4,7 @@ const getter = {
   avatar: state => state.user.avatar,
   curMonth: state => state.visual.curMonth,
   dateRange: state => state.visual.dateRange,
-  selectedData: state => state.visual.selectedData,
+  overviewData: state => state.visual.overviewData,
   plateParams: state => state.visual.plateParams,
 }
 

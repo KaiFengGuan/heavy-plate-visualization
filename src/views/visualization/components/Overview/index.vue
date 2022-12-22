@@ -29,7 +29,7 @@ export default {
     ...mapGetters([
       'curMonth',
       'dateRange',
-      'selectedData'
+      'overviewData'
     ])
   },
   data() {
@@ -43,7 +43,7 @@ export default {
     }
   },
   watch: {
-    selectedData() {
+    overviewData() {
       this.processRenderData();
     },
     dateRange() {
@@ -68,11 +68,11 @@ export default {
       const range = this.dateRange;
       getScatterDataByTime({ startTime: range[0], endTime: range[1] }).then((res) => {
         const { data } = res;
-        this.$store.dispatch('visual/saveSelectedData', Object.freeze(data));
+        this.$store.dispatch('visual/saveOverviewData', Object.freeze(data));
       });
     },
     processRenderData() {
-      const dataList = this.selectedData;
+      const dataList = this.overviewData;
       const scatters = [], sankeys = [];
       for (const item of dataList) {
         const {

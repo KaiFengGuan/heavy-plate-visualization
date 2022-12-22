@@ -1,7 +1,8 @@
 const state = {
   curMonth: '2021-03-01',
   dateRange: ['2021-03-25', '2021-03-31'],    // 通过日历组件选中的月份范围
-  selectedData: [],   // 选中的钢板数据，全局保存
+  overviewData: [],   // 总览的钢板数据
+  selectedData: [],   // 从overview视图选中的钢板，做规格分布视图展示用
   plateParams: {      // 同规格筛选数据, -1是初始值
     tgtdischargetemp: [-1, -1],
     tgtplatelength2: [-1, -1],
@@ -20,9 +21,9 @@ const mutations = {
     console.log('select date range: ', range);
     state.dateRange = [...range];
   },
-  SAVE_SELECTED_DATA: (state, dataList) => {
+  SAVE_OVERVIEW_DATA: (state, dataList) => {
     // console.log('in save_selected_data: ', dataList);
-    state.selectedData = dataList;
+    state.overviewData = dataList;
   },
   SET_PLATE_PARAMS: (state, params) => {
     console.log('set plateParams: ', params);
@@ -47,8 +48,8 @@ const actions = {
   selectDateRange({ commit }, range) {
     commit('SELECT_DATE_RANGE', range);
   },
-  saveSelectedData({ commit }, dataList) {
-    commit('SAVE_SELECTED_DATA', dataList);
+  saveOverviewData({ commit }, dataList) {
+    commit('SAVE_OVERVIEW_DATA', dataList);
   },
   setPlateParams({ commit }, params) {
     commit('SET_PLATE_PARAMS', params);

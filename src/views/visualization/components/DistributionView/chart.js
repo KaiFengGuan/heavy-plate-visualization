@@ -67,9 +67,8 @@ export default class DistributionChart {
     const that = this;
     this._root.on('click', function() {
       if (!that._brushState) return;
-      
-      that._active = !that._active;
-      if (that._active) {
+
+      if (!that._active) {
         that.#activate();
       } else {
         that.#deactivate();
@@ -224,6 +223,7 @@ export default class DistributionChart {
         binsBar.attr('opacity', 1);
         that.#hiddenBrushRange();
         that.#updateLabelPercent(that._firstLabel);
+        that.#deactivate();
         return;
       };
       that._brushState = true;
@@ -236,9 +236,9 @@ export default class DistributionChart {
   }
 
   #getBrushLabelData(r1, r2) {
-    const selectedData = store.getters.selectedData;
+    const overviewData = store.getters.overviewData;
     const key = this._name;
-    const filter = selectedData.filter(item => {
+    const filter = overviewData.filter(item => {
       return item[key]>=r1 && item[key]<=r2;
     });
     return [
@@ -372,6 +372,8 @@ export default class DistributionChart {
   }
 
   #activate() {
+    this._active = true;
+
     const { _root } = this;
     const trans = d3.transition().duration(500);
     
@@ -394,6 +396,8 @@ export default class DistributionChart {
   }
 
   #deactivate() {
+    this._active = false;
+
     const { _root } = this;
     const trans = d3.transition().duration(500);
     

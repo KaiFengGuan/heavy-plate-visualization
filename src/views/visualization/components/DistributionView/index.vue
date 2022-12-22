@@ -24,7 +24,7 @@ import DistributionChart from './chart';
 export default {
   computed: {
     ...mapGetters([
-      'selectedData',
+      'overviewData',
       'plateParams'
     ])
   },
@@ -37,7 +37,7 @@ export default {
     }
   },
   watch: {
-    selectedData(newVal) {
+    overviewData(newVal) {
       const renderData = this.processData(newVal);
       this.renderData = renderData;
       this.paint();
