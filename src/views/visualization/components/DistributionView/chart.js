@@ -26,6 +26,7 @@ export default class DistributionChart {
 
     this._x = null;
     this._y = null;
+    this._brush = null;
 
     this._name = '',  // 名称
     this._distribution = null;  // 分布数据
@@ -76,6 +77,13 @@ export default class DistributionChart {
     })
 
     return this;
+  }
+
+  setBrush(r1, r2) {
+    this.#setBrushRange(r1, r2);
+    this.#moveBrush(r1, r2);
+    const newLabelData = this.#getBrushLabelData(r1, r2);
+    this.#updateLabelPercent(newLabelData);
   }
 
   #scaleInit() {
@@ -189,6 +197,7 @@ export default class DistributionChart {
       .extent([[xRange[0], yRange[1]-5], [xRange[1], yRange[0]]])
       .on('start brush', _brushingHandle)
       .on('end', _brushEndHandle);
+    this._brush = brush;
     
     _root.append('g')
       .attr('class', 'brush-group')
@@ -233,6 +242,13 @@ export default class DistributionChart {
         [_name]: selection.map(d => _x.invert(d))
       });
     }
+  }
+
+  #moveBrush(r1, r2) {
+    const { _root, _brush, _x } = this;
+
+    _root.select('.brush-group')
+      .call(_brush.move, [r1, r2].map(_x))
   }
 
   #getBrushLabelData(r1, r2) {

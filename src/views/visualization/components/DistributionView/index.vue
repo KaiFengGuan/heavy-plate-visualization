@@ -25,7 +25,8 @@ export default {
   computed: {
     ...mapGetters([
       'overviewData',
-      'plateParams'
+      'plateParams',
+      'selectedData'
     ])
   },
   data() {
@@ -33,6 +34,7 @@ export default {
       svgId: `_distribution_${randomString()}`,
       keys: ['tgtwidth', 'tgtplatelength2', 'tgtthickness', 'tgtdischargetemp', 'tgttmplatetemp'],
       chartInsMap: new Map(), // 保存实例, 不需要响应式
+      plateMaps: new Map(),   // overview视图的钢板数据
       renderData: {},
     }
   },
@@ -44,6 +46,9 @@ export default {
     },
     plateParams() {
       console.log('in vue: plateParams has changed!!!')
+    },
+    selectedData() {
+      this.setDistribution()
     }
   },
   mounted() {
@@ -58,6 +63,9 @@ export default {
   },
   methods: {
     processData(data) {
+      this.plateMaps.clear();
+      data.forEach(item => this.plateMaps.set(item.upid, item));
+
       const renderData = {};
       const bin = d3.bin().thresholds(15);
       this.keys.forEach(key => {
@@ -93,6 +101,18 @@ export default {
         maxBins = Math.max(...values.map(d => d.length));
       }
       return maxBins;
+    },
+    setDistribution() {
+      const upids = this.selectedData;
+      const plates = upids.map(upid => {
+        const item = this.plateMaps.get(upid);
+        return item;
+      });
+      for (const key of this.keys) {
+        const ins = this.chartInsMap.get(key);
+        const range = d3.extent(plates, d => d[key]);
+        ins && ins.setBrush(...range);
+      }
     }
   },
 };

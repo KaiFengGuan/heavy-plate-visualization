@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import store from '@/store';
 import { dir } from '@/components/Tooltip';
 import { randomString, curry } from '@/utils';
 import { getLabelColor } from '../../utils';
@@ -196,7 +197,8 @@ export default class SankeyChart {
       label: label,
       h: t2 - t1,
       t1H: t1,
-      t2H: t2
+      t2H: t2,
+      data: d
     }
   }
 
@@ -240,7 +242,9 @@ export default class SankeyChart {
       };
 
       const brushedLinkData = _allSankeyData.filter(item => item.t2H>=selection[0] && item.t1H<=selection[1]);
+      const selectedUpids = brushedLinkData.map(d => d.data.map(e => e.upid)).flat();
       that.#renderLink(linkGroup, brushedLinkData);
+      store.dispatch('visual/saveSelectedData', selectedUpids)
     }
   }
 
