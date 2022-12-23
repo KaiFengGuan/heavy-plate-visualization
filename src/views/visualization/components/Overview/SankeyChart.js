@@ -69,15 +69,10 @@ export default class SankeyChart {
     const labelRange = [0, _height - top - bottom - _padding*2],
       timeRange = [top, _height - bottom];
     const labelDomain = [0, _data.length];
-    const [d0, d1] = d3.extent(_data, d => d.toc);
-    // 这样写是因为 brush 后，_scaleTime 的 domain 自动变了???
-    const timeDomain = [
-      new Date(d0.getFullYear(), d0.getMonth(), d0.getDate()),
-      new Date(d1.getFullYear(), d1.getMonth(), d1.getDate()+1),
-    ];
+    const timeDomain = d3.extent(_data, d => d.toc);
     
     this._scaleLabel = d3.scaleLinear(labelDomain, labelRange);
-    this._scaleTime = d3.scaleTime(timeDomain, timeRange);
+    this._scaleTime = d3.scaleTime(timeDomain, timeRange).nice();
   }
 
   #renderLink(linkGroup, linkList) {
@@ -172,7 +167,7 @@ export default class SankeyChart {
     this._root.append('g')
       .attr('transform', `translate(${_width-right-spaceRight}, 0)`)
       .style('user-select', 'none')
-      .call(d3.axisRight(_scaleTime.nice()).tickSize(0))
+      .call(d3.axisRight(_scaleTime).tickSize(0))
       .call(g => g.selectAll('.tick')
         .attr('font-size', 7.5)
         .attr('font-weight', 600)

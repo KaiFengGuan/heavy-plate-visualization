@@ -103,7 +103,7 @@ export default class DistributionChart {
     const xRange = [left+170, _width-right-5],
       yRange = [_height-bottom-10, top+5];
     
-    this._x = d3.scaleLinear(xDomain, xRange);
+    this._x = d3.scaleLinear(xDomain, xRange).nice();
     this._y = d3.scaleLinear(yDomain, yRange);
   }
 
@@ -178,7 +178,7 @@ export default class DistributionChart {
     
     _root.append('g')
       .attr('transform', `translate(0, ${_height-_margin.bottom-10})`)
-      .call(d3.axisBottom(_x.nice()).ticks(5).tickSize(3))
+      .call(d3.axisBottom(_x).ticks(5).tickSize(3))
       .call(g => {
         g.attr('font-size', 7.5)
           .attr('color', '#2c2c2c')

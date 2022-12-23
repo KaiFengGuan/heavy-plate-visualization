@@ -14,23 +14,18 @@ const state = {
 
 const mutations = {
   CHANGE_MONTH: (state, month) => {
-    console.log('in mutation: ', month);
     state.curMonth = month;
   },
   SELECT_DATE_RANGE: (state, range) => {
-    console.log('select date range: ', range);
     state.dateRange = [...range];
   },
   SAVE_OVERVIEW_DATA: (state, dataList) => {
-    // console.log('in save_selected_data: ', dataList);
     state.overviewData = dataList;
   },
   SET_PLATE_PARAMS: (state, params) => {
-    console.log('set plateParams: ', params);
     state.plateParams = { ...params };
   },
   RESET_PLATE_PARAMS: (state) => {
-    console.log('reset plateParams: ');
     state.plateParams = {
       tgtdischargetemp: [-1, -1],
       tgtplatelength2: [-1, -1],
