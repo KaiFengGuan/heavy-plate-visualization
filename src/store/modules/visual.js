@@ -38,7 +38,10 @@ const mutations = {
       tgttmplatetemp: [-1, -1],
       tgtwidth: [-1, -1]
     };
-  }
+  },
+  SAVE_SELECTED_DATA: (state, dataList) => {
+    state.selectedData = dataList;
+  },
 }
 
 const actions = {
@@ -56,6 +59,9 @@ const actions = {
   },
   resetPlateParams({ commit }) {
     commit('RESET_PLATE_PARAMS');
+  },
+  saveSelectedData({ commit }, dataList) {
+    commit('SAVE_SELECTED_DATA', dataList);
   }
 }
 
