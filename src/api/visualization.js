@@ -16,3 +16,12 @@ export function getScatterDataByTime(params) {
     params
   })
 }
+
+// 诊断数据
+export function getDiagnosesDataByUpids(data) {
+  return request({
+    url: '/newbaogangapi/v1.0/getDiagnosesDataByUpids',
+    method: 'post',
+    data
+  })
+}

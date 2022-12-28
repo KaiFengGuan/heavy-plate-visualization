@@ -9,7 +9,23 @@
 </template>
 
 <script>
-export default {};
+import { mapGetters } from 'vuex';
+import * as d3 from 'd3';
+import { getDiagnosesDataByUpids } from '@/api/visualization';
+
+export default {
+  computed: {
+    ...mapGetters([
+      'selectedData'
+    ])
+  },
+  mounted() {
+    getDiagnosesDataByUpids().then(res => {
+      const { data } = res;
+      console.log(Object.keys(data).length)
+    })
+  }
+};
 </script>
 
 <style lang="scss" scoped>
