@@ -8,8 +8,9 @@
 .footer-container {
   height: 100%;
   background: #fff;
-  -webkit-box-shadow: 1px 0 4px 0 rgb(0 0 0 / 12%);
-  box-shadow: 1px 0 4px 0 rgb(0 0 0 / 12%);
+  // -webkit-box-shadow: 1px 0 4px 0 rgb(0 0 0 / 12%);
+  // box-shadow: 1px 0 4px 0 rgb(0 0 0 / 12%);
+  border-top: 1px solid #E5E6EB;
   display: flex;
   justify-content: center;
   align-items: center;

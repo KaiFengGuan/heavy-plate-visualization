@@ -3,7 +3,7 @@
   .main-container {
     height: 100vh;
     transition: margin-left .28s;
-    margin-left: $sideBarWidth;
+    margin-left: calc($sideBarWidth + 1px);
     position: relative;
   }
 
@@ -76,7 +76,7 @@
     }
 
     .main-container {
-      margin-left: 54px;
+      margin-left: calc(54px + 1px);
     }
 
     .el-submenu {

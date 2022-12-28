@@ -52,6 +52,8 @@ export default {
   user-select: none;
 }
 .main-container {
+  overflow-y: hidden;
+  
   .el-header,
   .el-footer {
     padding: 0;

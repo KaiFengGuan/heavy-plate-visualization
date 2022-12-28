@@ -66,7 +66,7 @@ export const asyncRoutes = [
         path: 'home',
         name: 'home',
         component: () => import('@/views/home/index'),
-        meta: { title: '主页', icon: 'dashboard' }
+        meta: { title: '主页', icon: 'home' }
       }
     ]
   },
@@ -75,37 +75,37 @@ export const asyncRoutes = [
     name: 'data-overview',
     component: Layout,
     redirect: '/data-overview/key-indicators',
-    meta: { title: '数据概览', icon: 'dashboard' },
+    meta: { title: '数据概览', icon: 'arco-dashboard' },
     children: [
       {
         path: 'key-indicators',
         name: 'key-indicators',
         component: () => import('@/views/key-indicators/index'),
-        meta: { title: '关键指标', icon: 'dashboard' }
+        meta: { title: '关键指标', icon: 'key' }
       },
       {
         path: 'heating-process',
         name: 'heating-process',
         component: () => import('@/views/heating-process/index'),
-        meta: { title: '加热工序', icon: 'dashboard' }
+        meta: { title: '加热工序', icon: 'heating' }
       },
       {
         path: 'rolling-process',
         name: 'rolling-process',
         component: () => import('@/views/rolling-process/index'),
-        meta: { title: '轧制工序', icon: 'dashboard' }
+        meta: { title: '轧制工序', icon: 'industrial' }
       },
       {
         path: 'cooling-process',
         name: 'cooling-process',
         component: () => import('@/views/cooling-process/index'),
-        meta: { title: '冷却工序', icon: 'dashboard' }
+        meta: { title: '冷却工序', icon: 'cooling' }
       },
       {
         path: 'FQC-process',
         name: 'FQC-process',
         component: () => import('@/views/FQC-process/index'),
-        meta: { title: '质量检查', icon: 'dashboard' }
+        meta: { title: '质量检查', icon: 'quality' }
       }
     ]
   },
@@ -114,25 +114,25 @@ export const asyncRoutes = [
     name: 'data-analysis',
     component: Layout,
     redirect: '/data-analysis/heating-analysis',
-    meta: { title: '数据分析', icon: 'dashboard' },
+    meta: { title: '数据分析', icon: 'computer' },
     children: [
       {
         path: 'heating-analysis',
         name: 'heating-analysis',
         component: () => import('@/views/heating-analysis/index'),
-        meta: { title: '加热工序', icon: 'dashboard' }
+        meta: { title: '加热工序', icon: 'heating' }
       },
       {
         path: 'rolling-analysis',
         name: 'rolling-analysis',
         component: () => import('@/views/rolling-analysis/index'),
-        meta: { title: '轧制工序', icon: 'dashboard' }
+        meta: { title: '轧制工序', icon: 'industrial' }
       },
       {
         path: 'cooling-analysis',
         name: 'cooling-analysis',
         component: () => import('@/views/cooling-analysis/index'),
-        meta: { title: '冷却工序', icon: 'dashboard' }
+        meta: { title: '冷却工序', icon: 'cooling' }
       }
     ]
   },
@@ -141,13 +141,13 @@ export const asyncRoutes = [
     name: 'monitoring',
     component: Layout,
     redirect: '/monitoring/visualization',
-    meta: { title: '全流程监控', icon: 'dashboard' },
+    meta: { title: '全流程监控', icon: 'monitor' },
     children: [
       {
         path: 'visualization',
         name: 'visualization',
         component: () => import('@/views/visualization/index'),
-        meta: { title: '可视分析', icon: 'dashboard' }
+        meta: { title: '可视分析', icon: 'monitor' }
       }
     ]
   },
@@ -156,25 +156,25 @@ export const asyncRoutes = [
     name: 'administrator',
     component: Layout,
     redirect: '/administrator/user',
-    meta: { title: '系统管理', icon: 'dashboard' },
+    meta: { title: '系统管理', icon: 'arco-setting' },
     children: [
       {
         path: 'user',
         name: 'user',
         component: () => import('@/views/user/index'),
-        meta: { title: '用户管理', icon: 'dashboard' }
+        meta: { title: '用户管理', icon: 'user_1' }
       },
       {
         path: 'role',
         name: 'role',
         component: () => import('@/views/role/index'),
-        meta: { title: '角色管理', icon: 'dashboard' }
+        meta: { title: '角色管理', icon: 'user_admin' }
       },
       {
         path: 'permission',
         name: 'permission',
         component: () => import('@/views/permission/index'),
-        meta: { title: '权限管理', icon: 'dashboard' }
+        meta: { title: '权限管理', icon: 'quanxian' }
       }
     ]
   }

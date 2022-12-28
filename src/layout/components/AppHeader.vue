@@ -1,8 +1,8 @@
 <template>
   <div class="header-container">
-    <div class="hamburger hover-effect">
+    <!-- <div class="hamburger hover-effect">
       <hamburger :isActive="!sidebar" @toggleClick="toggleSideBar" />
-    </div>
+    </div> -->
     
     <div class="name hover-effect">厚板板形质量趋势监控系统</div>
 
@@ -59,8 +59,9 @@ export default {
 .header-container {
   height: 100%;
   background: #fff;
-  -webkit-box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
-  box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+  // -webkit-box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+  // box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+  border-bottom: 1px solid #E5E6EB;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -72,6 +73,8 @@ export default {
     font-weight: bold;
     letter-spacing: 0.12em;
     user-select: none;
+    flex: 1;
+    text-align: center;
   }
 
   .avatar-container {
