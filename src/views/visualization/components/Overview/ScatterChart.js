@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import { dir } from '@/components/Tooltip';
+import store from '@/store';
 import { randomString, curry } from '@/utils';
+import { lasso } from '@/components/Lasso';
 import { getLabelColor } from '../../utils';
 import tooltipIns from '@/utils/tooltip';
 
@@ -37,6 +39,7 @@ export default class ScatterChart {
 
     this.#renderScatter();
     this.#renderTooltip();
+    this.#renderLasso();
 
     return this;
   }
@@ -53,26 +56,30 @@ export default class ScatterChart {
     this._scaleY = d3.scaleLinear(yDomain, yRange);
   }
 
+  #pointPosition(datum) {
+    const { _scaleX, _scaleY } = this;
+    return [_scaleX(datum.x), _scaleY(datum.y)]
+  }
+
   #renderScatter() {
     const renderData = this._data;
-    const { _scaleX, _scaleY } = this;
 
     this._root.append('g')
-    .selectAll('.scatter-point')
+      .attr('class', 'scatter-group')
+    .selectAll('.scatter-points')
     .data(renderData)
     .join('circle')
-      .attr('class', 'scatter-point')
-      .attr('cx', d => _scaleX(d.x))
-      .attr('cy', d => _scaleY(d.y))
-      .attr('r', 2)
-      .attr('stroke-width', 1)
+      .attr('class', 'scatter-points')
+      .attr('transform', d => `translate(${this.#pointPosition(d)})`)
       .attr('stroke', d => getLabelColor(d.label))
       .attr('fill', d => d3.color(getLabelColor(d.label)).brighter(0.8))
+      .attr('r', 2)
+      .attr('stroke-width', 1)
   }
 
   #renderTooltip() {
     const that = this;
-    this._root.selectAll('.scatter-point')
+    this._root.selectAll('.scatter-points')
       .on('mouseenter', _mouseenterHandle)
       .on('mouseleave', _mouseleaveHandle)
 
@@ -98,6 +105,55 @@ export default class ScatterChart {
     function _mouseleaveHandle() {
       that.#resetPointSize(d3.select(this));
       tooltipIns && tooltipIns.removeTooltip();
+    }
+  }
+
+  #renderLasso() {
+    const that = this;
+    const { _root, _data } = this;
+
+    const scatterPoints = _root.selectAll('.scatter-points');
+    const lassoPath = _root.append('path').attr('class', 'lasso');
+    _root.append("defs").append("style").text(`
+      .selected {r: 4}
+      .lasso { pointer-events: none; fill-rule: evenodd; fill-opacity: 0.1; stroke-width: 1.5; stroke: #000; }
+    `);
+
+    _root.call(lasso()
+      .on("start lasso end", draw)
+      .on('end', function(polygon) {
+        const selected = [];
+
+        scatterPoints.classed(
+          "selected",
+          polygon.length > 2
+            ? d => d3.polygonContains(polygon, that.#pointPosition(d)) && selected.push(d.upid)
+            : false
+        );
+        
+        if (selected.length) {
+          store.dispatch('visual/saveSelectedData', selected)
+        }
+      })
+    );
+
+
+    function draw(polygon) {
+      lassoPath.datum({
+        type: 'LineString',
+        coordinates: polygon
+      }).attr('d', d3.geoPath());
+  
+      // const selected = polygon.length > 2 ? [] : _data;
+      
+      // // note: d3.polygonContains uses the even-odd rule
+      // // which is reflected in the CSS for the lasso shape
+      // scatterPoints.classed(
+      //   "selected",
+      //   polygon.length > 2
+      //     ? d => d3.polygonContains(polygon, that.#pointPosition(d)) && selected.push(d)
+      //     : false
+      // );
     }
   }
 
