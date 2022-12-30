@@ -116,6 +116,7 @@ export default class ScatterChart {
     const lassoPath = _root.append('path').attr('class', 'lasso');
     _root.append("defs").append("style").text(`
       .selected {r: 4}
+      .unselected {opacity: 0.2}
       .lasso { pointer-events: none; fill-rule: evenodd; fill-opacity: 0.1; stroke-width: 1.5; stroke: #000; }
     `);
 
@@ -128,6 +129,12 @@ export default class ScatterChart {
           "selected",
           polygon.length > 2
             ? d => d3.polygonContains(polygon, that.#pointPosition(d)) && selected.push(d.upid)
+            : false
+        );
+        scatterPoints.classed(
+          "unselected",
+          polygon.length > 2
+            ? d => !d3.polygonContains(polygon, that.#pointPosition(d))
             : false
         );
         
