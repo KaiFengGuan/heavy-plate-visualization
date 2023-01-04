@@ -9,7 +9,8 @@ const state = {
     tgtthickness: [-1, -1],
     tgttmplatetemp: [-1, -1],
     tgtwidth: [-1, -1]
-  }
+  },
+  mode: 1   // 分析模式: 1是种类, 2是时间
 }
 
 const mutations = {

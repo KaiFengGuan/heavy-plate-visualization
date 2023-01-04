@@ -1,4 +1,4 @@
-const diagnoses = require('./diagnoses.json');
+const diagnoses = require('./diagnoses2.json');
 
 module.exports = [
   // 单块钢板指标数据

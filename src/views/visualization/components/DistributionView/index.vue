@@ -106,11 +106,11 @@ export default {
       const upids = this.selectedData;
       const plates = upids.map(upid => {
         const item = this.plateMaps.get(upid);
-        return item;
+        return item ?? {};
       });
       for (const key of this.keys) {
         const ins = this.chartInsMap.get(key);
-        const range = d3.extent(plates, d => d[key]);
+        const range = d3.extent(plates, d => d[key] ?? 0);
         ins && ins.setBrush(...range);
       }
     }
