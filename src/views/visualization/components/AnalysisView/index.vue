@@ -17,7 +17,7 @@ import * as d3 from 'd3';
 import { randomString } from '@/utils';
 import { getDiagnosesDataByUpids } from '@/api/visualization';
 import { diagnosisDataToRenderData } from './utils';
-import AnalysisChart from './chart';
+import AnalysisChart from './AnalysisChart';
 
 export default {
   computed: {

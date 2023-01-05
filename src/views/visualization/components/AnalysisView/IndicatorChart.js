@@ -2,7 +2,7 @@ import * as d3 from 'd3';
 import { updateElement, translate } from '@/utils/selection';
 import { keysName, processName } from '../../utils';
 import { cellAttr } from './utils';
-import { horizon, river } from './baseChart';
+import { horizon, river } from './BaseChart';
 
 export default class IndicatorChart {
   constructor(group) {
