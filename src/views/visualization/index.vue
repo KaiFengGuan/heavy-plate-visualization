@@ -1,18 +1,24 @@
 <template>
-  <el-row class="visual-container">
-    <el-col :span="6">
-      <calendar-view class="calendar-view col-item" />
-      <overview class="overview col-item" />
-      <distribution-view class="distribution-view col-item" />
-    </el-col>
-    <el-col :span="12">
-      <analysis-view class="analysis-view col-item" />
-    </el-col>
-    <el-col :span="6">
+  <div class="visual-container">
+    <el-row>
+      <el-col :span="6">
+        <calendar-view class="calendar-view col-item" />
+        <overview class="overview col-item" />
+        <distribution-view class="distribution-view col-item" />
+      </el-col>
+      <el-col :span="18">
+        <analysis-view class="analysis-view col-item" />
+      </el-col>
+    </el-row>
+    <div class="my-drawer" :class="{'drawer-open': drawerState}">
       <snapshot-view class="snapshot-view col-item" />
       <conclusion-view class="conclusion-view col-item" />
-    </el-col>
-  </el-row>
+    </div>
+    <div class="switch-botton" :class="{'drawer-active': drawerState}" @click="switchDrawerHandle">
+      <svg-icon icon-class="arrow-double-left"></svg-icon>
+    </div>
+  </div>
+  
 </template>
 
 <script>
@@ -31,6 +37,17 @@ export default {
     AnalysisView,
     SnapshotView,
     ConclusionView
+  },
+  data() {
+    return {
+      drawerState: false
+    }
+  },
+  methods: {
+    switchDrawerHandle() {
+      const oldState = this.drawerState;
+      this.drawerState = !oldState;
+    }
   }
 }
 </script>
@@ -41,9 +58,8 @@ export default {
 $card_bottom: 10px;
 
 .visual-container {
-  // background-color: #EDF0F4;
-  // height: 100%;
   height: 910px;
+  position: relative;
 
   .el-card {
     margin-bottom: $card_bottom;
@@ -60,6 +76,51 @@ $card_bottom: 10px;
 
   .col-item:last-child {
     margin-bottom: 0;
+  }
+
+  .my-drawer {
+    width: 400px;
+    position: absolute;
+    z-index: 888;
+    top: 0;
+    right: -500px;
+    transition: right 0.28s;
+  }
+
+  .my-drawer.drawer-open {
+    right: 0;
+    transition: right 0.28s;
+  }
+
+  .switch-botton {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #7e7e7e;
+    border-radius: 50%;
+    position: fixed;
+    z-index: 999;
+    bottom: 50px;
+    right: 60px;
+    font-size: 13px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .switch-botton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    svg {
+      transition: transform 0.28s;
+      transform: rotate(0deg);
+    }
+  }
+
+  .drawer-active {
+    svg {
+      transition: transform 0.28s;
+      transform: rotate(180deg);
+    }
   }
 }
 </style>
