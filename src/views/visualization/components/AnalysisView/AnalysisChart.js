@@ -15,7 +15,7 @@ export default class AnalysisChart {
     this._root = rootNode;
     this._layout = {
       x1: 10,   // 类型视图与左边距离
-      x2: 100   // 指标视图与左边距离
+      x2: 250   // 指标视图与左边距离
     }
 
     this._x = null;

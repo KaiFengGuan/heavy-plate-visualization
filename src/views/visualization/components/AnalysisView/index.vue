@@ -43,15 +43,17 @@ export default {
       this.renderAnalysisChart();
     }
   },
-  created() {},
+  created() {
+    setTimeout(() => {
+      // 这个的触发应该是点了诊断按钮
+      getDiagnosesDataByUpids().then(res => {
+        const { data } = res;
+        const diagList = diagnosisDataToRenderData(data);
+        this.analysisData = Object.freeze(diagList);
+      })
+    }, 500)
+  },
   mounted() {
-    // 这个的触发应该是点了诊断按钮
-    getDiagnosesDataByUpids().then(res => {
-      const { data } = res;
-      const diagList = diagnosisDataToRenderData(data);
-      this.analysisData = Object.freeze(diagList);
-    })
-
     const chart = document.getElementById(this.chartId);
     const width = chart.clientWidth;
     const height = chart.clientHeight;

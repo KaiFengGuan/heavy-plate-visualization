@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import { updateElement, translate } from '@/utils/selection';
 import { keysName, processName } from '../../utils';
-import { cellAttr } from './utils';
+import { cellAttr, formatStartEnd } from './utils';
 import { horizon, river } from './BaseChart';
 
 export default class IndicatorChart {
@@ -46,6 +46,7 @@ export default class IndicatorChart {
     this._root.selectChildren().remove();  // 先清空
 
     this.#renderNames();
+    this.#renderLabel();
     this.#renderCell();
 
     return this;
@@ -59,7 +60,7 @@ export default class IndicatorChart {
     for (let i = 0; i < _data.length; i++) {
       const { upid } = _data[i];
       const datum = _diagMap.get(upid).diagnosis;
-      let xOffset = 0;
+      let xOffset = this.#labelWidth();
       for (let j = 0; j < datum.length; j++) {
         // const xPrev = datum.slice(0, j).map(d => d.length).reduce((a, b) => a + b, 0);
         const g = _root.append('g')
@@ -115,7 +116,7 @@ export default class IndicatorChart {
     const namesMap = [];
 
     const g = _root.append('g');
-    let xOffset = 0;
+    let xOffset = this.#labelWidth();
     for (let i = 0; i < 3; i++) {
       const nameG = g.append('g');
 
@@ -147,5 +148,124 @@ export default class IndicatorChart {
       .text(d => d)
       .attr('transform', (d, i) => `translate(${i*10}, 0) rotate(-45)`)
       .attr('font-size', 8)
+  }
+
+  #labelWidth() {
+    const { open_h } = cellAttr;
+    return open_h * 5;
+  }
+
+  #renderLabel() {
+    const that = this;
+    const { _root, _data } = this;
+    const { open_h, fold_h } = cellAttr;
+    
+    let flag = false;
+    let start = -1, end = -1;
+    const gAttr = {
+      transform: (_, i) => translate(0, i*fold_h),
+      class: (_, i) => `upid-label-${i}`
+    };
+    const rectAttr = {
+      width: open_h,
+      height: fold_h,
+      fill: 'white',
+      stroke: 'red',
+      x: (_, i) => open_h * i
+    };
+    const circleAttr = {
+      class: 'clear-button',
+      r: 5,
+      fill: 'green',
+      display: 'none'
+    };
+    _root.append('g')
+      .selectAll('upid-label')
+      .data(_data)
+    .join('g')
+      .call(g => updateElement(g, gAttr))
+      .on('click', __clickHandle)
+      .on('mouseenter mouseleave', __overHandle)
+    .selectAll('labels')
+      .data(d => new Array(5).fill(d.label))
+      .join('rect')
+      .call(g => updateElement(g, rectAttr))
+
+    _root.append('circle')
+      .call(g => updateElement(g, circleAttr))
+      .on('click', __resetHandle)
+    
+    function __clickHandle(e, d) {
+      const idx = that.#indexByUpid(d.upid);
+      if (!flag) start = idx;
+      else end = idx;
+      
+      if (start === -1 && end === -1) {
+        __displayClearButton(false);
+      } else {
+        __displayClearButton(true);
+        if (start !== -1 && end !== -1) {
+          const [s, e] = formatStartEnd(start, end);
+          console.log(`start: ${s}, end: ${e}, can do something!!!!`)
+        }
+      }
+
+      flag = !flag;
+    }
+    function __overHandle(e, d) {
+      if (!flag) return;
+
+      const tempEnd = that.#indexByUpid(d.upid);
+      that.#setLabelGroupState(start, tempEnd);
+    }
+    function __resetHandle() {
+      flag = false;
+      start = -1;
+      end = -1;
+      that.#setLabelGroupState(start, end);
+      __displayClearButton(false);
+    }
+    function __displayClearButton(display) {
+      _root.select('.clear-button').attr('display', display ? 'block' : 'none');
+    }
+  }
+
+  #setLabelGroupState(start, end) {
+    const { _root, _data } = this;
+
+    if (start === -1 && end === -1) {
+      _data.forEach((_, i) => __resetRectByIndex(i));
+      return;
+    }
+
+    const [s, e] = formatStartEnd(start, end);
+
+    for (let i = 0; i < _data.length; i++) {
+      if (s <= i && i <= e) {
+        __setRectByIndex(i);
+      } else {
+        __resetRectByIndex(i);
+      }
+    }
+
+    function __setRectByIndex(idx) {
+      _root.selectAll(`.upid-label-${idx}`)
+        .selectAll('rect')
+        .call(g => updateElement(g, {
+          stroke: 'blue'
+        }))
+    }
+    function __resetRectByIndex(idx) {
+      _root.selectAll(`.upid-label-${idx}`)
+        .selectAll('rect')
+        .call(g => updateElement(g, {
+          stroke: 'red'
+        }))
+    }
+  }
+
+  #indexByUpid(upid) {
+    const { _data } = this;
+    return _data.map(d => d.upid).indexOf(upid);
   }
 }

@@ -105,3 +105,14 @@ export function dataSlicing(dataList) {
 function setTypeData(typeData, steelspec, data) {
   if (!typeData[steelspec]) typeData[steelspec] = {};
 }
+
+/**
+ * 
+ * @param {number} start 
+ * @param {number} end 
+ * @returns array
+ */
+export function formatStartEnd(start, end) {
+  if (start > end) return [end, start];
+  else return [start, end];
+}
