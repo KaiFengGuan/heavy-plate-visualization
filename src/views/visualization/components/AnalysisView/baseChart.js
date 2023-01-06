@@ -33,7 +33,7 @@ export function horizon(g, data, {
   const yScale = yType(yDomain, yRange);
 
   // A unique identifier for clip paths (to avoid conflicts).
-  const uid = `O-${randomString()}`;
+  const uid = `${randomString()}`;
 
   // Construct an area generator.
   const area = d3.area()

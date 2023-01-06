@@ -12,6 +12,10 @@ export default class IndicatorChart {
     this._diagMap = new Map();    // 每个钢板的每个工序的诊断结果
     this._groupMap = new Map();   // 每个钢板的每个工序的group
     this._foldState = [false, true, false];   // 各工序展开折叠状态
+
+    this._flag = false;   // upid选择状态
+    this._start = -1;
+    this._end = -1;
     
     return this;
   }
@@ -105,6 +109,7 @@ export default class IndicatorChart {
       x: d => d.name,
       y: d => d.value,
       height: fold_h,
+      width: data.length * open_w,
       bands: 7,
       yDomain: [0, 1]
     })
@@ -159,9 +164,7 @@ export default class IndicatorChart {
     const that = this;
     const { _root, _data } = this;
     const { open_h, fold_h } = cellAttr;
-    
-    let flag = false;
-    let start = -1, end = -1;
+
     const gAttr = {
       transform: (_, i) => translate(0, i*fold_h),
       class: (_, i) => `upid-label-${i}`
@@ -197,32 +200,33 @@ export default class IndicatorChart {
     
     function __clickHandle(e, d) {
       const idx = that.#indexByUpid(d.upid);
-      if (!flag) start = idx;
-      else end = idx;
+      if (!that._flag) that._start = idx;
+      else that._end = idx;
       
-      if (start === -1 && end === -1) {
+      if (that._start === -1 && that._end === -1) {
         __displayClearButton(false);
       } else {
         __displayClearButton(true);
-        if (start !== -1 && end !== -1) {
-          const [s, e] = formatStartEnd(start, end);
-          console.log(`start: ${s}, end: ${e}, can do something!!!!`)
+        if (that._start !== -1 && that._end !== -1) {
+          const [s, e] = formatStartEnd(that._start, that._end);
+          that.#setPlateState(s, e, true);
         }
       }
 
-      flag = !flag;
+      that._flag = !that._flag;
     }
     function __overHandle(e, d) {
-      if (!flag) return;
+      if (!that._flag) return;
 
       const tempEnd = that.#indexByUpid(d.upid);
-      that.#setLabelGroupState(start, tempEnd);
+      that.#setLabelGroupStyle(that._start, tempEnd);
     }
     function __resetHandle() {
-      flag = false;
-      start = -1;
-      end = -1;
-      that.#setLabelGroupState(start, end);
+      that.#setPlateState(that._start, that._end, false);
+      that._flag = false;
+      that._start = -1;
+      that._end = -1;
+      that.#setLabelGroupStyle(that._start, that._end);
       __displayClearButton(false);
     }
     function __displayClearButton(display) {
@@ -230,7 +234,7 @@ export default class IndicatorChart {
     }
   }
 
-  #setLabelGroupState(start, end) {
+  #setLabelGroupStyle(start, end) {
     const { _root, _data } = this;
 
     if (start === -1 && end === -1) {
@@ -267,5 +271,70 @@ export default class IndicatorChart {
   #indexByUpid(upid) {
     const { _data } = this;
     return _data.map(d => d.upid).indexOf(upid);
+  }
+
+  // 按行设置折叠/展开状态.  open控制 [start, end] 范围内的变化方式
+  #setPlateState(start, end, open) {
+    const { _root, _data, _groupMap } = this;
+    const { open_h, fold_h } = cellAttr;
+    const [s, e] = formatStartEnd(start, end);
+    const h = open ? open_h : fold_h;
+
+    let yOffset = 0;
+    for (let i = 0; i < _data.length; i++) {
+      const upid = _data[i].upid;
+      const _o = (s <= i && i <= e) && open;
+
+      this.#setLabelStateByIndex(i, yOffset, _o);   // 设置标签区域
+      this.#setCellStateByUpid(upid, yOffset, _o);  // 设置指标区域
+
+      (s <= i && i <= e) ? yOffset += h : yOffset += fold_h;
+    }
+  }
+
+  #setLabelStateByIndex(idx, yOffset, open) {
+    const { _root } = this;
+    const { open_h, fold_h } = cellAttr;
+
+    const g = _root.selectAll(`.upid-label-${idx}`);
+    g.attr('transform', translate(0, yOffset));
+    g.selectAll('rect').attr('height', open ? open_h : fold_h);
+  }
+
+  #setCellStateByUpid(upid, yOffset, open) {
+    const { _diagMap, _groupMap, _foldState } = this;
+    const { open_h, fold_h, open_w } = cellAttr;
+
+    const gArr = _groupMap.get(upid);
+    if (!gArr) return;
+
+    for (let i = 0; i < _foldState.length; i++) {
+      if (_foldState[i]) {
+        const datum = _diagMap.get(upid).diagnosis;
+        __setOpenCell(gArr[i], datum[i], yOffset, open);
+      } else {
+        __setFoldCell(gArr[i], yOffset, open);
+      }
+    }
+
+    function __setFoldCell(g, yOffset, open) {
+      const transform = g.attr('transform');
+      g.attr('transform', transform.split(',')[0] + `,${yOffset})`);
+      g.selectAll('rect').attr('height', open ? open_h : fold_h);
+    }
+    function __setOpenCell(g, data, yOffset, open) {
+      const transform = g.attr('transform');
+      g.attr('transform', transform.split(',')[0] + `,${yOffset})`);
+
+      g.selectChildren().remove();
+      horizon(g, data, {
+        x: d => d.name,
+        y: d => d.value,
+        height: open ? open_h : fold_h,
+        width: data.length*open_w,
+        bands: 7,
+        yDomain: [0, 1]
+      });
+    }
   }
 }

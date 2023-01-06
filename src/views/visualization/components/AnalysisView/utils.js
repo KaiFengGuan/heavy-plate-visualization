@@ -63,7 +63,7 @@ export function diagnosisDataToRenderData(data) {
 
 // chart的绘图参数
 export const cellAttr = {
-  open_h: 25,
+  open_h: 20,
   open_w: 10,
   fold_h: 8,
   fold_w: 3,
