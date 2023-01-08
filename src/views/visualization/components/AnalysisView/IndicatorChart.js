@@ -1,8 +1,26 @@
 import * as d3 from 'd3';
-import { updateElement, translate } from '@/utils/selection';
-import { keysName, processName } from '../../utils';
+import { appendElement, updateElement, translate } from '@/utils/selection';
+import { keysName, processName, formatText, visualColor } from '../../utils';
 import { cellAttr, formatStartEnd } from './utils';
 import { horizon, river } from './BaseChart';
+
+import heating from '../../logo/heating.svg';
+import rolling from '../../logo/rolling.svg';
+import cooling from '../../logo/cooling.svg';
+const processIcon = [heating, rolling, cooling];
+const processColor = [visualColor.heating, visualColor.rolling, visualColor.cooling];
+
+// l: 底, h: 高: a: 倾斜角度
+const alpha = 65;
+function xLenByAngle(h, alpha) {
+  const r = alpha * Math.PI / 180;
+  return h / Math.tan(r);
+}
+function parallelogramArea(l, h, a=alpha) {
+  const x = xLenByAngle(h, a);
+  const points = [[0, 0], [x, -h], [l+x, -h], [l, 0]];
+  return `M${points.join("L")}Z`;
+}
 
 export default class IndicatorChart {
   constructor(group) {
@@ -49,66 +67,60 @@ export default class IndicatorChart {
   render() {
     this._root.selectChildren().remove();  // 先清空
 
-    this.#renderNames();
     this.#renderLabel();
     this.#renderCell();
+    this.#renderNames();
 
     return this;
   }
 
   #renderCell() {
-    const that = this;
     const { _root, _foldState, _data, _diagMap, _groupMap } = this;
-    const { fold_h, fold_w, open_h, open_w } = cellAttr;
+    const { fold_h } = cellAttr;
 
     for (let i = 0; i < _data.length; i++) {
       const { upid } = _data[i];
       const datum = _diagMap.get(upid).diagnosis;
-      let xOffset = this.#labelWidth();
       for (let j = 0; j < datum.length; j++) {
-        // const xPrev = datum.slice(0, j).map(d => d.length).reduce((a, b) => a + b, 0);
+        const xOffset = this.#xOffsetByIndex(j),
+              yOffset = this.#yOffsetByIndex(i);
         const g = _root.append('g')
           // .attr('transform', translate(xOffset, (_foldState[j] ? open_h : fold_h)*i))
-          .attr('transform', translate(xOffset, fold_h*i))
+          .attr('transform', translate(xOffset, yOffset))
           .attr('id', `${upid}_${j}`)
         
         _foldState[j]
-          ? this.#renderOpenCell(g, datum[j])
-          : this.#renderFoldCell(g, datum[j])
-        // this.#renderFoldCell(g, datum[j]);
+          ? this.#renderOpenCell(g, datum[j], fold_h)
+          : this.#renderFoldCell(g, datum[j], fold_h)
 
-        // _foldState[j]
-        //   ? xOffset += open_w * keysName[j].length
-        //   : xOffset += fold_w * keysName[j].length;
-        xOffset += keysName[j].length * (_foldState[j] ? open_w : fold_w);
         _groupMap.get(upid)[j] = g;
       }
     }
   }
 
-  #renderFoldCell(group, data) {
+  #renderFoldCell(group, data, height) {
     const color = (d) => {
       if (d.value >= d.u) return ['red', d.value - d.u]
       else if (d.value <= d.l) return ['blue', d.l - d.value]
       else return ['white', 1]
     }
-    const { fold_h, fold_w } = cellAttr;
+    const { fold_w } = cellAttr;
     group.selectAll('.indicator')
       .data(data)
       .join('rect')
       .attr('width', fold_w)
-      .attr('height', fold_h)
+      .attr('height', height)
       .attr('x', (d, i) => fold_w*i)
       .attr('fill', d => color(d)[0])
       .attr('opacity', d => color(d)[1])
   }
 
-  #renderOpenCell(group, data) {
-    const { fold_h, open_h, open_w } = cellAttr;
+  #renderOpenCell(group, data, height) {
+    const { open_w } = cellAttr;
     horizon(group, data, {
       x: d => d.name,
       y: d => d.value,
-      height: fold_h,
+      height: height,
       width: data.length * open_w,
       bands: 7,
       yDomain: [0, 1]
@@ -116,43 +128,127 @@ export default class IndicatorChart {
   }
 
   #renderNames() {
-    const { _root, _foldState, _data, _diagMap, _groupMap } = this;
-    const { fold_h, fold_w, open_h, open_w } = cellAttr;
-    const namesMap = [];
+    const that = this;
+    const { _root, _foldState } = this;
 
     const g = _root.append('g');
-    let xOffset = this.#labelWidth();
     for (let i = 0; i < 3; i++) {
-      const nameG = g.append('g');
+      const xOffset = this.#xOffsetByIndex(i);
+      const nameG = g.append('g')
+        .attr('transform', translate(xOffset, 0))
+        .attr('class', `name-group-${i}`);
+
+      this.#renderNameBgc(nameG, i);
 
       _foldState[i]
-        ? this.#renderOpenName(nameG, keysName[i], xOffset, 0)
-        : this.#renderFoldName(nameG, processName[i], xOffset, 0)
-      // this.#renderFoldName(nameG, processName[i], xOffset, 0);
-      
-      // _foldState[i]
-      //   ? xOffset += open_w * keysName[i].length
-      //   : xOffset += fold_w * keysName[i].length;
-      xOffset += keysName[i].length * (_foldState[i] ? open_w : fold_w);
-      namesMap[i] = nameG;
+        ? this.#renderOpenName(nameG, i)
+        : this.#renderFoldName(nameG, i)
+
+      this.#renderIcon(nameG, processIcon[i], i);
+      this.#updateIconPosition(i);
     }
+
+    g.selectAll('.icon-group')
+      .on('click', function() {
+        const idx = parseInt(d3.select(this).attr('data-index'));
+        that._foldState[idx] = !that._foldState[idx];
+        that.#setProcessState();
+        that.#setNameState();
+      })
   }
 
-  #renderFoldName(group, data, x, y) {
-    group.append('text')
-      .text(data)
-      .attr('transform', translate(x, y))
-      .attr('font-size', 12)
+  #renderFoldName(group, idx) {
+    const width = keysName[idx].length * cellAttr.fold_w;
+    const data = processName[idx];
+    const xErr = xLenByAngle(cellAttr.title_h/2, alpha);
+    group
+      .call(g => appendElement(g, 'text', {
+        text: data,
+        x: width/2 + xErr,
+        y: -cellAttr.title_h/2 + 4,
+        class: 'process-name',
+        'font-size': 12,
+        'text-anchor': 'middle',
+        'dominant-baseline': 'hanging'
+      }))
+      .style('user-select', 'none')
   }
 
-  #renderOpenName(group, data, x, y) {
-    group.attr('transform', translate(x, y));
+  #renderOpenName(group, idx) {
+    const data = keysName[idx];
     group.selectAll('text')
       .data(data)
       .join('text')
-      .text(d => d)
-      .attr('transform', (d, i) => `translate(${i*10}, 0) rotate(-45)`)
-      .attr('font-size', 8)
+      .call(g => updateElement(g, {
+        text: d => formatText(d),
+        transform: (d, i) => `translate(${i*10+2}, -5) rotate(-55)`,
+        class: 'process-name',
+        'font-size': 8,
+        'dominant-baseline': 'hanging'
+      }))
+      .style('user-select', 'none')
+  }
+
+  #renderIcon(group, iconUrl, idx) {
+    const iconW = 12, rectW = 16;
+    const groupAttr = {
+      class: 'icon-group',
+      'data-index': idx,
+      cursor: 'pointer'
+    }
+    const imgAttr ={
+      width: iconW, height: iconW,
+      x: -iconW/2, y: -iconW/2,
+      href: iconUrl
+    };
+
+    const rectAttr = {
+      width: rectW, height: rectW, rx: rectW/2,
+      x: -rectW/2, y: -rectW/2,
+      stroke: 'transparent',
+      'stroke-width': 5,
+      fill: 'white'
+    };
+    group.append('g')
+      .call(g => updateElement(g, groupAttr))
+      .call(g => appendElement(g, 'rect', rectAttr))
+      .call(g => appendElement(g, 'image', imgAttr))
+  }
+
+  #updateIconPosition(idx) {
+    const { _root, _foldState } = this;
+    const { fold_w, open_w, title_h } = cellAttr;
+    const open = _foldState[idx];
+    const width = keysName[idx].length * (open ? open_w : fold_w);
+    const nameG = _root.selectAll(`.name-group-${idx}`);
+
+    let x, y;
+    if (open) {
+      x = 10 + xLenByAngle(title_h, alpha);
+      y = -title_h + 12;
+    } else {
+      x = width/2 + xLenByAngle(title_h/2, alpha);
+      y = -title_h/2 - 8
+    }
+    nameG.selectAll('.icon-group')
+      .call(g => updateElement(g, {
+        transform: translate(x, y)
+      }))
+      .call(g => g.raise())
+  }
+
+  #renderNameBgc(group, idx) {
+    const { _foldState } = this;
+    const { fold_w, open_w, title_h } = cellAttr;
+    const open = _foldState[idx];
+    const len = keysName[idx].length;
+    const pathAttr = {
+      class: 'name-bgc',
+      stroke: processColor[idx],
+      fill: d3.color(processColor[idx]).brighter(0.5),
+      d: parallelogramArea(len * (open ? open_w : fold_w), title_h)
+    };
+    group.call(g => appendElement(g, 'path', pathAttr))
   }
 
   #labelWidth() {
@@ -166,7 +262,7 @@ export default class IndicatorChart {
     const { open_h, fold_h } = cellAttr;
 
     const gAttr = {
-      transform: (_, i) => translate(0, i*fold_h),
+      transform: (_, i) => translate(0, this.#yOffsetByIndex(i)),
       class: (_, i) => `upid-label-${i}`
     };
     const rectAttr = {
@@ -222,10 +318,11 @@ export default class IndicatorChart {
       that.#setLabelGroupStyle(that._start, tempEnd);
     }
     function __resetHandle() {
-      that.#setPlateState(that._start, that._end, false);
+      let oldS = that._start, oldE = that._end;
       that._flag = false;
       that._start = -1;
       that._end = -1;
+      that.#setPlateState(oldS, oldE, false);
       that.#setLabelGroupStyle(that._start, that._end);
       __displayClearButton(false);
     }
@@ -280,15 +377,13 @@ export default class IndicatorChart {
     const [s, e] = formatStartEnd(start, end);
     const h = open ? open_h : fold_h;
 
-    let yOffset = 0;
     for (let i = 0; i < _data.length; i++) {
       const upid = _data[i].upid;
       const _o = (s <= i && i <= e) && open;
+      const yOffset = this.#yOffsetByIndex(i);
 
       this.#setLabelStateByIndex(i, yOffset, _o);   // 设置标签区域
       this.#setCellStateByUpid(upid, yOffset, _o);  // 设置指标区域
-
-      (s <= i && i <= e) ? yOffset += h : yOffset += fold_h;
     }
   }
 
@@ -336,5 +431,95 @@ export default class IndicatorChart {
         yDomain: [0, 1]
       });
     }
+  }
+
+  // 按 列 设置折叠/展开状态.
+  #setProcessState() {
+    const that = this;
+    const { _data, _groupMap, _diagMap, _foldState, _start, _end } = this;
+    const { open_w, open_h, fold_w, fold_h } = cellAttr;
+
+    for (let i = 0; i < _data.length; i++) {
+      const { upid } = _data[i];
+      const datum = _diagMap.get(upid).diagnosis;
+      const gArr = _groupMap.get(upid);
+      if (!gArr) continue;
+
+      const [s, e] = formatStartEnd(_start, _end);
+      let h = fold_h;
+      if ((s!==-1 && e!==-1) && (s<=i && i<=e)) h = open_h;
+
+      for (let j = 0; j < _foldState.length; j++) {
+        const g = gArr[j];
+        const xOffset = this.#xOffsetByIndex(j),
+              yOffset = this.#yOffsetByIndex(i);
+        const transform = g.attr('transform');
+        g.attr('transform', translate(xOffset, yOffset));
+        
+        g.selectChildren().remove();
+        _foldState[j]
+          ? this.#renderOpenCell(g, datum[j], h)
+          : this.#renderFoldCell(g, datum[j], h)
+      }
+    }
+  }
+
+  #setNameState() {
+    for (let i = 0; i < 3; i++) {
+      const nameG = this._root.selectAll(`.name-group-${i}`);
+      const xOffset = this.#xOffsetByIndex(i);
+
+      nameG.attr('transform', translate(xOffset, 0));
+      __setBackground.call(this, nameG, i);
+      __setProcessName.call(this, nameG, i);
+      this.#updateIconPosition(i);
+    }
+
+    function __setBackground(g, i) {
+      const { _foldState } = this;
+      const { fold_w, open_w, title_h } = cellAttr;
+      const open = _foldState[i];
+      const length = keysName[i].length,
+            height = title_h;
+      g.selectAll('.name-bgc')
+        .call(g => updateElement(g, {
+          // stroke: processColor[i],
+          // fill: open ? 'white' : d3.color(processColor[i]).brighter(0.5),
+          d: parallelogramArea(length*(open?open_w:fold_w), height)
+        }))
+    }
+    function __setProcessName(g, i) {
+      const { _foldState } = this;
+      g.selectAll('.process-name').remove();
+      _foldState[i]
+        ? this.#renderOpenName(g, i)
+        : this.#renderFoldName(g, i)
+    }
+  }
+
+  #xOffsetByIndex(idx) {
+    const { _foldState } = this;
+    const { fold_w, open_w } = cellAttr;
+    let offset = this.#labelWidth();
+    const padding = 3;
+    for (let i = 0; i < _foldState.length; i++) {
+      if (i === idx) break;
+      const open = _foldState[i],
+            length = keysName[i].length;
+      offset += length * (open ? open_w : fold_w) + padding;
+    }
+    return offset;
+  }
+
+  #yOffsetByIndex(idx) {
+    const { _data, _start, _end } = this;
+    const { fold_h, open_h } = cellAttr;
+    const [s, e] = formatStartEnd(_start, _end);
+    let offset = 0;
+    for (let i = 0; i < _data.length; i++) {
+      if (i === idx) break;
+      offset += (s <= i && i <= e) ? open_h : fold_h;
+    }
+    return offset;
   }
 }

@@ -1,3 +1,5 @@
+import textTrans from './text';
+
 // 可视分析视图 配置
 export const visualColor = {
   // // 故障颜色
@@ -147,6 +149,16 @@ export const keysName = [
   ]
 ]
 
+/**
+ * 
+ * @param {string} key 
+ * @param {string} type (full | abbr | zh)
+ */
+export function formatText(key, type='abbr') {
+  const obj = textTrans[key];
+  if (obj && obj[type]) return obj[type];
+  else return '';
+}
 
 export default {
   visualColor,
