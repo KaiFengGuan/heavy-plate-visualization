@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import { appendElement, updateElement, translate } from '@/utils/selection';
-import { keysName, processName, formatText, visualColor } from '../../utils';
+import { keysName, processName, formatText, visualColor, schemeLabel } from '../../utils';
 import { cellAttr, formatStartEnd } from './utils';
 import { horizon, river } from './BaseChart';
 
@@ -34,6 +34,22 @@ export default class IndicatorChart {
     this._flag = false;   // upid选择状态
     this._start = -1;
     this._end = -1;
+
+    let yMax = 0.8, span = [[0, 0]];
+    const n = Math.floor(schemeLabel.length/2);
+    let s = yMax / n, t = 0;
+    for (let i = 1; i <= n; i++) {
+      if (i !== n) {
+        span.unshift([-t-s, -t]);
+        span.push([t, t+s]);
+      } else {
+        span.unshift([-Infinity, -t]);
+        span.push([t, Infinity]);
+      }
+      t += s;
+    }
+    this._yMax = yMax;
+    this._span = span;
     
     return this;
   }
@@ -98,6 +114,32 @@ export default class IndicatorChart {
     }
   }
 
+  // 根据显示模式控制视图的取值方式
+  #chartYValue() {
+    const yValue = d => {
+      let { value, u, l } = d;
+      if (l<=value && value<=u) return 0;
+      else if (value < l) return value - l;
+      else return value - u;
+    };
+
+    return yValue;
+  }
+
+  // 根据给定值返回 schemeLabel 颜色的索引
+  #colorIndex(value) {
+    const { _span } = this;
+    const n = _span.length;
+
+    for (let i = 0; i < n; i++) {
+      const [x1, x2] = _span[i];
+      if (x1 === 0 && x2 === 0 && value === 0) return i;
+      if (x1 <= value && value < x2) return i;
+    }
+
+    return Math.floor(n / 2);
+  }
+
   #renderFoldCell(group, data, height) {
     const color = (d) => {
       if (d.value >= d.u) return ['red', d.value - d.u]
@@ -105,25 +147,45 @@ export default class IndicatorChart {
       else return ['white', 1]
     }
     const { fold_w } = cellAttr;
-    group.selectAll('.indicator')
-      .data(data)
-      .join('rect')
-      .attr('width', fold_w)
-      .attr('height', height)
-      .attr('x', (d, i) => fold_w*i)
-      .attr('fill', d => color(d)[0])
-      .attr('opacity', d => color(d)[1])
+    // const yValue = this.#chartYValue();
+    // group.selectAll('.indicator')
+    //   .data(data)
+    //   .join('rect')
+    //   .attr('width', fold_w)
+    //   .attr('height', height)
+    //   .attr('x', (d, i) => fold_w*i)
+    //   // .attr('fill', d => {
+    //   //   const y = yValue(d);
+    //   //   const idx = this.#colorIndex(y);
+    //   //   console.log(y, idx)
+    //   //   return schemeLabel[idx]
+    //   // })
+    //   .attr('fill', d => color(d)[0])
+    //   .attr('opacity', d => color(d)[1])
+
+
+    const { _yMax } = this;
+    horizon(group, data, {
+      x: d => d.name,
+      y: this.#chartYValue(),
+      height: height,
+      width: data.length * fold_w,
+      yDomain: [-_yMax, _yMax],
+      colors: schemeLabel
+    })
   }
 
   #renderOpenCell(group, data, height) {
     const { open_w } = cellAttr;
+    const { _yMax } = this;
+
     horizon(group, data, {
       x: d => d.name,
-      y: d => d.value,
+      y: this.#chartYValue(),
       height: height,
       width: data.length * open_w,
-      bands: 7,
-      yDomain: [0, 1]
+      yDomain: [-_yMax, _yMax],
+      colors: schemeLabel
     })
   }
 
@@ -245,7 +307,8 @@ export default class IndicatorChart {
     const pathAttr = {
       class: 'name-bgc',
       stroke: processColor[idx],
-      fill: d3.color(processColor[idx]).brighter(0.5),
+      // fill: d3.color(processColor[idx]).brighter(0.5),
+      fill: 'white',
       d: parallelogramArea(len * (open ? open_w : fold_w), title_h)
     };
     group.call(g => appendElement(g, 'path', pathAttr))
@@ -398,7 +461,7 @@ export default class IndicatorChart {
 
   #setCellStateByUpid(upid, yOffset, open) {
     const { _diagMap, _groupMap, _foldState } = this;
-    const { open_h, fold_h, open_w } = cellAttr;
+    const { open_h, fold_h } = cellAttr;
 
     const gArr = _groupMap.get(upid);
     if (!gArr) return;
@@ -406,7 +469,7 @@ export default class IndicatorChart {
     for (let i = 0; i < _foldState.length; i++) {
       if (_foldState[i]) {
         const datum = _diagMap.get(upid).diagnosis;
-        __setOpenCell(gArr[i], datum[i], yOffset, open);
+        __setOpenCell.call(this, gArr[i], datum[i], yOffset, open);
       } else {
         __setFoldCell(gArr[i], yOffset, open);
       }
@@ -422,14 +485,7 @@ export default class IndicatorChart {
       g.attr('transform', transform.split(',')[0] + `,${yOffset})`);
 
       g.selectChildren().remove();
-      horizon(g, data, {
-        x: d => d.name,
-        y: d => d.value,
-        height: open ? open_h : fold_h,
-        width: data.length*open_w,
-        bands: 7,
-        yDomain: [0, 1]
-      });
+      this.#renderOpenCell(g, data, open ? open_h : fold_h)
     }
   }
 

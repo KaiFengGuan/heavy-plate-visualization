@@ -16,6 +16,8 @@ export const visualColor = {
   cooling: '#C1C9EE',
 };
 
+export const schemeLabel = ['#165DFF', '#6AA1FF', '#BEDAFF', '#FFFFFF', '#FDCDC5', '#F98981', '#F53F3F'];
+
 export function getLabelColor(label) {
   if (label === '1') return visualColor.good;
   else if (label === '0') return visualColor.bad;
