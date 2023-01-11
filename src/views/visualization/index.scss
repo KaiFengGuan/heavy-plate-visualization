@@ -1,7 +1,10 @@
 .el-card {
+  border-color: #d9d9d9;
 
   &.is-always-shadow {
-    box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+    // box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+    -webkit-box-shadow: unset;
+    box-shadow: unset;
   }
   
   .el-card__header {

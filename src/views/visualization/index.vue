@@ -60,6 +60,8 @@ $card_bottom: 10px;
 .visual-container {
   height: 910px;
   position: relative;
+  overflow: hidden;
+  padding-bottom: 20px;
 
   .el-card {
     margin-bottom: $card_bottom;
