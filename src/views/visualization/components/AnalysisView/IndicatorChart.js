@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import { appendElement, updateElement, translate } from '@/utils/selection';
+import eventBus from '@/utils/eventBus';
 import { keysName, processName, formatText, visualColor, schemeLabel } from '../../utils';
 import { cellAttr, formatStartEnd } from './utils';
 import { horizon, river } from './BaseChart';
@@ -88,6 +89,18 @@ export default class IndicatorChart {
     this.#renderNames();
 
     return this;
+  }
+
+  getBatchHeight() {
+    const { _start, _end, _data } = this;
+    const { fold_h, open_h, title_h } = cellAttr;
+    const [s, e] = formatStartEnd(_start, _end);
+
+    let h = title_h;
+    for (let i = 0; i < _data.length; i++) {
+      h += (s <= i && i <= e) ? open_h : fold_h;
+    }
+    return h;
   }
 
   #renderCell() {
@@ -369,6 +382,7 @@ export default class IndicatorChart {
         if (that._start !== -1 && that._end !== -1) {
           const [s, e] = formatStartEnd(that._start, that._end);
           that.#setPlateState(s, e, true);
+          eventBus.emit('changePlatesSelected');
         }
       }
 
@@ -388,6 +402,7 @@ export default class IndicatorChart {
       that.#setPlateState(oldS, oldE, false);
       that.#setLabelGroupStyle(that._start, that._end);
       __displayClearButton(false);
+      eventBus.emit('changePlatesSelected');
     }
     function __displayClearButton(display) {
       _root.select('.clear-button').attr('display', display ? 'block' : 'none');

@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import { updateElement, translate } from '@/utils/selection';
+import eventBus from '@/utils/eventBus';
 import { dataSlicing, cellAttr } from './utils';
 import IndicatorChart from './IndicatorChart';
 
@@ -26,6 +27,8 @@ export default class AnalysisChart {
     this._typeData = null;
     this._timeData = null;
 
+    this._batchIns = [];
+
     return this;
   }
 
@@ -50,25 +53,38 @@ export default class AnalysisChart {
 
     this.#renderBatch();
 
+    eventBus.on('changePlatesSelected', () => this.#transformBatch());
+
     return this;
   }
 
   #renderBatch() {
+    const that = this;
     const { _root, _layout, _timeData } = this;
 
-    const batchHeight = d => d.length*cellAttr.fold_h + cellAttr.title_h;
     _root.selectAll('.batch')
       .data(_timeData)
       .join('g')
-      .attr('transform', (d, i) => {
-        const prevH = _timeData.slice(0, i).map(e => batchHeight(e));
-        const yOffset = prevH.reduce((a, b) => a+b, 0);
-        return translate(_layout.x2, yOffset);
-      })
-      .attr('custom--handle', function (d) {
+      .attr('class', 'batch')
+      .attr('custom--handle', function (d, i) {
         const ins = new IndicatorChart(d3.select(this));
         ins.dataInit(d).render();
+        that._batchIns[i] = ins;
       })
 
+    this.#transformBatch();
+  }
+
+  #transformBatch() {
+    const { _root, _layout } = this;
+    const { title_h, padding } = cellAttr;
+    let prev = title_h;
+    _root.selectAll('.batch')
+      .attr('transform', (_, i) => {
+        const ins = this._batchIns[i];
+        const yOffset = prev;
+        prev += ins.getBatchHeight() + padding;
+        return translate(_layout.x2, yOffset);
+      })
   }
 }

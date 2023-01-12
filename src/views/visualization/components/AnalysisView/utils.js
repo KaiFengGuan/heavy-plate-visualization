@@ -67,7 +67,8 @@ export const cellAttr = {
   open_w: 10,
   fold_h: 8,
   fold_w: 3,
-  title_h: 50
+  title_h: 50,
+  padding: 15
 };
 
 /**
